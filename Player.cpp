@@ -2,7 +2,10 @@
 
 Player::Player(const sf::Vector2f& pos)
 	:
-	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath)
+	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
+	EngineAnim(64,64,8,0.1f,true),
+	ShieldAnim(64,64,10,0.09f,true)
+
 {
 	sp.SetSize({ playerShipSize,playerShipSize });
 	sp.UpdateBaseTexRect(sf::IntRect({0, 0},{64,64}));
@@ -10,8 +13,15 @@ Player::Player(const sf::Vector2f& pos)
 	sp.UpdateShieldTexRect(sf::IntRect({0, 0},{64,64}));
 }
 
-void Player::Draw(sf::RenderWindow& window)
+void Player::Draw(sf::RenderWindow& window,float delta)
 {
+	EngineAnim.Update(delta);
+	sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
+	if(sp.GetShieldState())
+	{
+		ShieldAnim.Update(delta);
+		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
+	}
 	sp.Draw(window);
 }
 
@@ -39,6 +49,11 @@ void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::
 
 	sp.SetPosition(sp.GetPosition() + (dir * speed * delta));
 	WallCollision(leftRightBound,topBottomBound);
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		sp.SetShieldState(true);
+	}
 }
 
 void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2f& TopBottomBound)
