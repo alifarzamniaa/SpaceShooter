@@ -1,16 +1,24 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player(const sf::Vector2f& pos)
 	:
 	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
 	EngineAnim(64,64,8,0.1f,true),
-	ShieldAnim(64,64,10,0.09f,true)
-
+	ShieldAnim(64,64,10,0.09f,true),
+	BulletAnim(9,12,8,0.1f,true),
+	Bullet(12,12,BulletTex,BulletAnim,sf::IntRect({0,0},{9,12}),800.f)
 {
+	if(!BulletTex.loadFromFile(BulletImgPath))
+	{
+		std::cout << "FAILED TO LOAD BULLET TEXTURE!!!\n";
+	}
 	sp.SetSize({ playerShipSize,playerShipSize });
 	sp.UpdateBaseTexRect(sf::IntRect({0, 0},{64,64}));
 	sp.UpdateEngineTexRect(sf::IntRect({0, 0},{64,64}));
 	sp.UpdateShieldTexRect(sf::IntRect({0, 0},{64,64}));
+
+	
 }
 
 void Player::Draw(sf::RenderWindow& window,float delta)
@@ -23,6 +31,11 @@ void Player::Draw(sf::RenderWindow& window,float delta)
 		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
 	}
 	sp.Draw(window);
+	if(Bullet.IsActive())
+	{
+		Bullet.Fire(delta);
+		Bullet.Draw(window,delta);
+	}
 }
 
 void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound)
@@ -50,9 +63,15 @@ void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::
 	sp.SetPosition(sp.GetPosition() + (dir * speed * delta));
 	WallCollision(leftRightBound,topBottomBound);
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
 	{
 		sp.SetShieldState(true);
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		BulletSocket = sp.GetPosition() + sf::Vector2f(30.f, 30.f);
+		Bullet.SetPosition(BulletSocket.x, BulletSocket.y);
+		Bullet.SetActive(true);
 	}
 }
 
@@ -83,4 +102,15 @@ void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2
 	{
 		sp.SetPosition({sp.GetPosition().x, top - horizontalPadding }); // keep the x pos same and fix it to top
 	}
+}
+
+
+sf::Texture& Player::GetBulletTex()
+{
+	return BulletTex;
+}
+
+Animation Player::GetBulletAnim()
+{
+	return BulletAnim;
 }
