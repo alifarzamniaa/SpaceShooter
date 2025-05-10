@@ -1,18 +1,19 @@
 #include "Bullets.h"
 
-Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed)
+Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, bool Dir)
 	:
 	bulletAnim(bulletAnim),
-	speed(fireSpeed)
+	speed(fireSpeed),
+	Direction(Dir)
 {
 	bullet.setSize({width,height});
 	bullet.setTexture(&bulletModel);
 	bullet.setTextureRect(TexRect);
 }
 
-void Bullets::Fire(float delta, bool direction)
+void Bullets::Update(float delta)
 {
-	float vel = direction ? speed * delta : -speed * delta;
+	float vel = Direction ? speed * delta : -speed * delta;
 	bullet.move(sf::Vector2f{ 0,vel });
 }
 
@@ -25,7 +26,6 @@ void Bullets::Draw(sf::RenderWindow& window,float delta)
 		window.draw(bullet);
 	}
 }
-
 void Bullets::SetSize(float width, float height)
 {
 	bullet.setSize(sf::Vector2f{width,height});

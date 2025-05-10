@@ -7,7 +7,7 @@ Player::Player(const sf::Vector2f& pos)
 	EngineAnim(64,64,8,0.1f,true),
 	ShieldAnim(64,64,10,0.09f,true),
 	BulletAnim(9,12,8,0.1f,true),
-	Bullet(12,12,BulletTex,BulletAnim,sf::IntRect({0,0},{9,12}),800.f)
+	Bullet(12,12,BulletTex,BulletAnim,sf::IntRect({0,0},{9,12}),800.f,false)
 {
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
@@ -23,19 +23,57 @@ Player::Player(const sf::Vector2f& pos)
 
 void Player::Draw(sf::RenderWindow& window,float delta)
 {
+	Update(delta);
+	sp.Draw(window);
+	if(Bullet.IsActive())
+	{
+		Bullet.Draw(window,delta);
+	}
+}
+
+void Player::Update(float delta)
+{
 	EngineAnim.Update(delta);
 	sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
-	if(sp.GetShieldState())
+	if (sp.GetShieldState())
 	{
 		ShieldAnim.Update(delta);
 		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
 	}
-	sp.Draw(window);
-	if(Bullet.IsActive())
+	if (Bullet.IsActive())
 	{
-		Bullet.Fire(delta);
-		Bullet.Draw(window,delta);
+		Bullet.Update(delta);
 	}
+}
+
+sf::Vector2f Player::GetPosition() const
+{
+	return sp.GetPosition();
+}
+
+sf::Vector2f Player::GetSize() const
+{
+	return sp.GetSize();
+}
+
+void Player::SetPosition(float x, float y)
+{
+	sp.SetPosition({x,y});
+}
+
+void Player::SetSize(float width, float height)
+{
+	sp.SetSize({ width,height });
+}
+
+bool Player::IsActive() const
+{
+	return ActiveState;
+}
+
+void Player::SetActive(bool in_state)
+{
+	ActiveState = in_state;
 }
 
 void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound)
@@ -69,9 +107,8 @@ void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 	{
-		BulletSocket = sp.GetPosition() + sf::Vector2f(30.f, 30.f);
-		Bullet.SetPosition(BulletSocket.x, BulletSocket.y);
-		Bullet.SetActive(true);
+		
+		//Bullet logic later
 	}
 }
 
