@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="PlayArea.cpp" />
     <ClCompile Include="Props\Bullets.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="PlayArea.h" />
     <ClInclude Include="Props\Bullets.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Props\Pool.h" />

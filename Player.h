@@ -4,11 +4,12 @@
 #include "Props/SpaceShip.h"
 #include "Animation.h"
 #include "Props/Bullets.h"
+#include "Props/pool.h"
 class Player : public Entity
 {
 public:
 	Player(const sf::Vector2f& pos);	
-	void Draw(sf::RenderWindow& window, float delta) override;
+	void Draw(sf::RenderWindow& window) override;
 	void Update(float delta) override;
 
 	sf::Vector2f GetPosition() const override;
@@ -22,6 +23,7 @@ public:
 
 	void Movement(float delta, const sf::Vector2f& leftRightBound, const sf::Vector2f& TopBottomBound);
 	void WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound);
+	void Actions(float delta, Pool& bulletPool, std::optional<sf::Event> e);
 	
 	sf::Texture& GetBulletTex();
 	Animation GetBulletAnim();
@@ -48,7 +50,7 @@ private:
 
 	//change its value on constructor
 	sf::Vector2f LBulletSocket = sf::Vector2f(30.f, 30.f); // left Socket
-	sf::Vector2f RBulletSocket = sf::Vector2f(30.f, 60.f); // Right Socket
+	sf::Vector2f RBulletSocket = sf::Vector2f(60.f, 30.f); // Right Socket
 	
 	//obj
 	SpaceShip sp;
@@ -56,6 +58,5 @@ private:
 	Animation EngineAnim;
 	Animation ShieldAnim;
 	Animation BulletAnim;
-	Bullets Bullet;
 };
 

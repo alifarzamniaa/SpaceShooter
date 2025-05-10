@@ -13,16 +13,19 @@ Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, cons
 
 void Bullets::Update(float delta)
 {
+	bulletAnim.Update(delta);
+	bullet.setTextureRect(bulletAnim.GetCurrentFrame());
 	float vel = Direction ? speed * delta : -speed * delta;
 	bullet.move(sf::Vector2f{ 0,vel });
+
+	if(GetPosition().y < 0)
+		SetActive(false);
 }
 
-void Bullets::Draw(sf::RenderWindow& window,float delta)
+void Bullets::Draw(sf::RenderWindow& window)
 {
 	if(ActiveState)
 	{
-		bulletAnim.Update(delta);
-		bullet.setTextureRect(bulletAnim.GetCurrentFrame());
 		window.draw(bullet);
 	}
 }

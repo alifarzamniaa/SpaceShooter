@@ -9,10 +9,10 @@ public:
 	sf::IntRect GetCurrentFrame();
 private:
 	std::vector<sf::IntRect> Frames;
-	float FDuration; // Duration of each frame
+	// Duration of each frame
+	float FDuration; 
 	float CurrentTime = 0.f;
 	int nFrame;
 	int CurrentFrameIndex;
 	bool Looped;
 };
-

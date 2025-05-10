@@ -8,19 +8,35 @@ public:
 		:
 		size(size)
 	{
-		pool.resize(size);
 	}
+	// getting the first entity that is InActive so we can activate and use it
 	Entity* GetFreeEntity()
 	{
-		auto poolIt = std::find_if(pool.begin(),pool.end(),[](const Entity& e)
+		auto poolIt = std::find_if(pool.begin(),pool.end(),[](const std::unique_ptr<Entity>& e)
 		{
-			return e.IsActive();
+			if(e)
+				return !e->IsActive();
 		});
 		if(poolIt != pool.end())
 			return poolIt->get();
 		else
 			return nullptr;
 	}
+	// get an array of active items so we know which ones are currently available
+	std::vector<Entity*> GetActiveItem()
+	{
+		std::vector<Entity*> items;
+		for(auto& e : pool)
+		{
+			if(e && e->IsActive())
+			{
+				items.push_back(e.get());
+			}
+		}
+		return items;
+	}
+	// add entity to the pool system
+	// you must fill the entire array with this so you can re-use the pre created objects
 	void AddEntity(std::unique_ptr<Entity> e)
 	{
 		pool.push_back(std::move(e));

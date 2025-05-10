@@ -6,8 +6,7 @@ Player::Player(const sf::Vector2f& pos)
 	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
 	EngineAnim(64,64,8,0.1f,true),
 	ShieldAnim(64,64,10,0.09f,true),
-	BulletAnim(9,12,8,0.1f,true),
-	Bullet(12,12,BulletTex,BulletAnim,sf::IntRect({0,0},{9,12}),800.f,false)
+	BulletAnim(9,12,8,0.09f,true)
 {
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
@@ -21,14 +20,9 @@ Player::Player(const sf::Vector2f& pos)
 	
 }
 
-void Player::Draw(sf::RenderWindow& window,float delta)
+void Player::Draw(sf::RenderWindow& window)
 {
-	Update(delta);
 	sp.Draw(window);
-	if(Bullet.IsActive())
-	{
-		Bullet.Draw(window,delta);
-	}
 }
 
 void Player::Update(float delta)
@@ -39,10 +33,6 @@ void Player::Update(float delta)
 	{
 		ShieldAnim.Update(delta);
 		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
-	}
-	if (Bullet.IsActive())
-	{
-		Bullet.Update(delta);
 	}
 }
 
@@ -95,21 +85,13 @@ void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::
 	{
 		dir.x = -1;
 	}
+	// this is fix for diagonal movement which caused fast movement
 	if(dir.length() > 1)
 		dir = dir.normalized();
 
 	sp.SetPosition(sp.GetPosition() + (dir * speed * delta));
 	WallCollision(leftRightBound,topBottomBound);
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
-	{
-		sp.SetShieldState(true);
-	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-	{
-		
-		//Bullet logic later
-	}
 }
 
 void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2f& TopBottomBound)
@@ -138,6 +120,35 @@ void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2
 	if (meshTopSide < top)
 	{
 		sp.SetPosition({sp.GetPosition().x, top - horizontalPadding }); // keep the x pos same and fix it to top
+	}
+}
+
+void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+	{
+		sp.SetShieldState(true);
+	}
+	// if mouse is pressed and it is left mouse button
+	if (const auto* mouseButtonPressed = e->getIf<sf::Event::MouseButtonPressed>())
+	{
+		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
+		{
+			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
+			if (firstBullet)
+			{
+				sf::Vector2f FirstMuzzleLocation = GetPosition() + LBulletSocket;
+				firstBullet->SetPosition(FirstMuzzleLocation.x, FirstMuzzleLocation.y);
+				firstBullet->SetActive(true);
+			}
+			Bullets* secondBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
+			if (secondBullet)
+			{
+				sf::Vector2f SecondMuzzleLocation = GetPosition() + RBulletSocket;
+				secondBullet->SetPosition(SecondMuzzleLocation.x, SecondMuzzleLocation.y);
+				secondBullet->SetActive(true);
+			}
+		}
 	}
 }
 

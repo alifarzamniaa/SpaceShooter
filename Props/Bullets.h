@@ -9,7 +9,7 @@ public:
 	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, bool Dir = false);
 	
 	void Update(float delta) override; 
-	void Draw(sf::RenderWindow& window, float delta) override;
+	void Draw(sf::RenderWindow& window) override;
 
 	sf::Vector2f GetPosition() const override;
 	sf::Vector2f GetSize() const override;
