@@ -4,9 +4,10 @@
 Player::Player(const sf::Vector2f& pos)
 	:
 	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
-	EngineAnim(64,64,8,0.1f,true),
-	ShieldAnim(64,64,10,0.09f,true),
-	BulletAnim(9,12,8,0.09f,true)
+	EngineAnim(64,64,8,0.1f),
+	ShieldAnim(64,64,10,0.09f),
+	BulletAnim(9,12,8,0.09f),
+	FiringAnim(64,64,9,0.03f)
 {
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
@@ -33,6 +34,15 @@ void Player::Update(float delta)
 	{
 		ShieldAnim.Update(delta);
 		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
+	}
+	if (IsFiring)
+	{
+		FiringAnim.Update(delta);
+		sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
+		if(FiringAnim.IsAnimFinished())
+		{
+			IsFiring = false;
+		}
 	}
 }
 
@@ -132,6 +142,7 @@ void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
 	// if mouse is pressed and it is left mouse button
 	if (const auto* mouseButtonPressed = e->getIf<sf::Event::MouseButtonPressed>())
 	{
+		IsFiring = true;
 		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 		{
 			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());

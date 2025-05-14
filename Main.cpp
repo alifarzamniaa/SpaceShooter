@@ -3,7 +3,7 @@
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode({700,900}),"Space Shooter");
+	sf::RenderWindow window(sf::VideoMode({750,950}),"Space Shooter");
 	sf::Clock clock;
 	PlayArea playArea(100,window);
 	while(window.isOpen())

@@ -1,10 +1,9 @@
 #include "Animation.h"
 
-Animation::Animation(int FrameWidth, int Frameheight, int FrameCount, float FrameDuration,bool isLooped)
+Animation::Animation(int FrameWidth, int Frameheight, int FrameCount, float FrameDuration)
 	:
 	CurrentFrameIndex(0),
 	FDuration(FrameDuration),
-	Looped(isLooped),
 	nFrame(FrameCount)
 {
 	for(int i = 0; i < nFrame;i++)
@@ -21,15 +20,14 @@ void Animation::Update(float delta)
 	{
 		if(CurrentFrameIndex < nFrame - 1)
 		{
+			isFinished = false;
 			CurrentFrameIndex++;
 			CurrentTime = 0;
 		}
 		else
 		{
-			if(!Looped)
-				CurrentFrameIndex = nFrame - 1;
-			else
 				CurrentFrameIndex = 0;
+				isFinished = true;
 		}
 	}
 }
@@ -37,5 +35,10 @@ void Animation::Update(float delta)
 sf::IntRect Animation::GetCurrentFrame()
 {
 	return Frames[CurrentFrameIndex];
+}
+
+bool Animation::IsAnimFinished() const
+{
+	return isFinished;
 }
 

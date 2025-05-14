@@ -47,7 +47,7 @@ private:
 	float ShieldCooldown = 20.f; // in seconds
 	float ShieldDuration = 5.f; // in seconds
 	bool ActiveState = true;
-
+	bool IsFiring = false;
 	//change its value on constructor
 	sf::Vector2f LBulletSocket = sf::Vector2f(30.f, 30.f); // left Socket
 	sf::Vector2f RBulletSocket = sf::Vector2f(60.f, 30.f); // Right Socket
@@ -55,6 +55,7 @@ private:
 	//obj
 	SpaceShip sp;
 	sf::Texture BulletTex;
+	Animation FiringAnim;
 	Animation EngineAnim;
 	Animation ShieldAnim;
 	Animation BulletAnim;

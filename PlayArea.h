@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Props/Pool.h"
 #include "Props/Bullets.h"
+#include "background.h"
 class PlayArea
 {
 public:
@@ -13,6 +14,7 @@ public:
 private:
 	sf::RenderWindow& window;
 	Player player;
+	Background bg;
 	Pool playerBulletPool;
 };
 

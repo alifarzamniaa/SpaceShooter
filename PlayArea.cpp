@@ -4,7 +4,8 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	:
 	window(window),
 	playerBulletPool(PlayerBulletSize),
-	player({600.f,600.f})
+	player({600.f,600.f}),
+	bg(window,200.f)
 {
 	for(int i = 0; i < playerBulletPool.GetSize();i++)
 	{
@@ -16,6 +17,7 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 
 void PlayArea::Draw()
 {
+	bg.Draw(window);
 	player.Draw(window);
 	for (auto& e : playerBulletPool.GetActiveItem())
 	{
@@ -28,6 +30,7 @@ void PlayArea::Update(float delta)
 {
 	player.Movement(delta, { 0,(float)window.getSize().x }, { 0,(float)window.getSize().y });
 	player.Update(delta);
+	bg.Update(delta,window);
 	
 	// updating the active bullets
 	for(auto& e : playerBulletPool.GetActiveItem())

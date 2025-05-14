@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="PlayArea.cpp" />
     <ClCompile Include="Props\Bullets.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="PlayArea.h" />
     <ClInclude Include="Props\Bullets.h" />

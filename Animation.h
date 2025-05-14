@@ -4,9 +4,10 @@
 class Animation
 {
 public:
-	Animation(int width,int height,int FrameCount,float animDuration,bool isLooped);
+	Animation(int width,int height,int FrameCount,float animDuration);
 	void Update(float delta);
 	sf::IntRect GetCurrentFrame();
+	bool IsAnimFinished() const;
 private:
 	std::vector<sf::IntRect> Frames;
 	// Duration of each frame
@@ -14,5 +15,5 @@ private:
 	float CurrentTime = 0.f;
 	int nFrame;
 	int CurrentFrameIndex;
-	bool Looped;
+	bool isFinished = false;
 };
