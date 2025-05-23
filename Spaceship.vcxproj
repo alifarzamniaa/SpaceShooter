@@ -144,8 +144,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\Actions\Roam.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="AI\EnemyAI.cpp" />
     <ClCompile Include="PlayArea.cpp" />
     <ClCompile Include="Props\Bullets.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -153,8 +155,12 @@
     <ClCompile Include="Props\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\Actions\Roam.h" />
+    <ClInclude Include="AI\AIAction.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="AI\EnemyAI.h" />
+    <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="PlayArea.h" />
     <ClInclude Include="Props\Bullets.h" />
