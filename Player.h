@@ -49,8 +49,8 @@ private:
 	bool ActiveState = true;
 	bool IsFiring = false;
 	//change its value on constructor
-	sf::Vector2f LBulletSocket = sf::Vector2f(30.f, 30.f); // left Socket
-	sf::Vector2f RBulletSocket = sf::Vector2f(60.f, 30.f); // Right Socket
+	sf::Vector2f LBulletSocket = sf::Vector2f(-20.f, -15.f); // left Socket
+	sf::Vector2f RBulletSocket = sf::Vector2f(5.f, -15.f); // Right Socket
 	
 	//obj
 	SpaceShip sp;

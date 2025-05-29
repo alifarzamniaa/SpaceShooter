@@ -1,18 +1,35 @@
 #include "EnemyAI.h"
 
-EnemyAI::EnemyAI(Enemy* e,std::vector<AIAction*>& ListOfActions)
+EnemyAI::EnemyAI(std::vector<std::shared_ptr<AIAction>>& ListOfActions)
 	:
-	AttachedEnemy(e),
-	ListOFActions(ListOFActions)
+	actionsList(std::move(ListOfActions))
 {
 	CurrentAction = nullptr;
+}
+
+EnemyAI::EnemyAI(EnemyAI&& other)
+	:
+	CurrentAction(other.CurrentAction)
+{
+	other.CurrentAction = nullptr;
+}
+
+EnemyAI& EnemyAI::operator=(EnemyAI&& other)
+{
+	if(this != &other)
+	{
+		delete CurrentAction;//freeing the existing one
+		CurrentAction = other.CurrentAction;
+		other.CurrentAction = nullptr;//freeing other resource
+	}
+	return *this;
 }
 
 void EnemyAI::Update(float dt)
 {	
 	if(actions.size() == 0)
 	{
-		for(auto& a : ListOFActions)
+		for(auto& a : actionsList)
 		{
 			actions.push(a);
 		}
@@ -20,7 +37,7 @@ void EnemyAI::Update(float dt)
 	if(!CurrentAction)
 	{
 		// get current task from queue
-		CurrentAction = actions.front();
+		CurrentAction = actions.front().get();
 		CurrentAction->Start();
 	}
 	else
@@ -33,4 +50,10 @@ void EnemyAI::Update(float dt)
 			actions.pop();
 		}
 	}
+}
+
+EnemyAI::~EnemyAI()
+{
+	delete CurrentAction;
+	CurrentAction = nullptr;
 }

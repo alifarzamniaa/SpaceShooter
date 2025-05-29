@@ -1,26 +1,17 @@
 #pragma once
 #include "../AIAction.h"
-#include "../../Entity.h"
+#include "../../Enemy/Enemy.h"
 #include "../../Props/Pool.h"
 #include <Memory>
 
-//TODO make the movement function works with these enums
-// I'm gonna use function variable and base on this enum, update() will call the func var
-enum MovementFuncType
-{
-	linearMove,
-	sinMove,
-	circularMove,
-	diagonalMove,
-	spiralMove
-};
-class Roam : AIAction
+class Roam : public AIAction
 {
 public:
-	// - e: the entity that this action is attached to it ( usually the Ai that manages enemy has it as reference) 
+	// - e: the enemy that this action is attached to it ( usually the Ai that manages enemy has it as reference) 
 	// - Task Duration : set how much time(in seconds) needs to roam
-	// - range : the range of movement in x direction (-range to range from the current position)
-	Roam(Entity* e,float TaskDuration,float range,float speed);
+	// - range : the range of movement in x direction (-range to range from the initPosX position)
+	// - LeftRightBound : Horizontal boundaries: left (x-value), right (y-value)
+	Roam(Enemy* e, float TaskDuration, float range, float speed,const sf::Vector2f& LeftRightBound);
 	//initialize values when a task is started ( it can be empty but the child class needs to have it )
 	void Start() override;
 	// the task which is going to be excuted every frame
@@ -30,13 +21,18 @@ public:
 	// state of the current task
 	bool IsFinished() override;
 private:
-	std::unique_ptr<Entity> AttachedEntity; // this gets the entity that this action is attached to it
+	std::unique_ptr<Enemy> AttachedEntity; // this gets the entity that this action is attached to it
 	float Duration;
 	float Elapsed;
 	float RangeX;
-	float speed; 
+	float speed;
 	float Dir;
 	float InitPosX;
+
+	float leftBound;
+	float rightBound;
+	float topBound;
+	float bottomBound;
 	bool ActiveState;
 };
 

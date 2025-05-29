@@ -148,6 +148,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="AI\EnemyAI.cpp" />
+    <ClCompile Include="Enemy\Fighter.cpp" />
     <ClCompile Include="PlayArea.cpp" />
     <ClCompile Include="Props\Bullets.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="AI\EnemyAI.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Enemy\Fighter.h" />
     <ClInclude Include="PlayArea.h" />
     <ClInclude Include="Props\Bullets.h" />
     <ClInclude Include="Player.h" />

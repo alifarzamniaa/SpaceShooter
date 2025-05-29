@@ -18,10 +18,12 @@ public:
 
 	//chaning state of the spaceship
 	void SetShieldState(bool in_state);
+	void SetRotation(const sf::Angle& in_rot);
 	void SetPosition(const sf::Vector2f& in_pos);
 	void SetSize(const sf::Vector2f& in_size);
 	
 	//getting the states
+	sf::Angle GetRotation() const;
 	sf::Vector2f GetPosition() const;
 	sf::Vector2f GetSize() const;
 	bool GetShieldState() const;

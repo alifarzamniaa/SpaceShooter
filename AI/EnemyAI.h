@@ -6,12 +6,16 @@
 class EnemyAI
 {
 public:
-	EnemyAI(Enemy* e, std::vector<AIAction*>& ListOfActions);
+	EnemyAI(std::vector<std::shared_ptr<AIAction>>& ListOfActions);
+	EnemyAI(const Enemy& other) = delete;
+	EnemyAI& operator=(const Enemy& other) = delete;
+	EnemyAI(EnemyAI&& other);
+	EnemyAI& operator=(EnemyAI&& other);
 	void Update(float dt);
+	~EnemyAI();
 private:
-	std::queue<AIAction*> actions;
-	std::vector<AIAction*>& ListOFActions;
+	std::queue<std::shared_ptr<AIAction>> actions;
+	std::vector<std::shared_ptr<AIAction>> actionsList;
 	AIAction* CurrentAction;
-	Enemy* AttachedEnemy;
 };
 

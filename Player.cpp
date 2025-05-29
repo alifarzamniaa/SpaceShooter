@@ -111,25 +111,25 @@ void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2
 	float top = TopBottomBound.x;
 	float bottom = TopBottomBound.y;
 
-	float meshRightSide = (sp.GetPosition().x + sp.GetSize().x) - verticalPadding;
-	float meshLeftSide = sp.GetPosition().x + verticalPadding;
-	float meshTopSide = sp.GetPosition().y + horizontalPadding;
-	float meshBottomSide = (sp.GetPosition().y + sp.GetSize().y) - horizontalPadding;
+	float meshRightSide = (sp.GetPosition().x + (sp.GetSize().x / 2)) - verticalPadding;
+	float meshLeftSide = sp.GetPosition().x - (sp.GetSize().x / 2) + verticalPadding;
+	float meshTopSide = (sp.GetPosition().y - (sp.GetSize().y / 2)) + horizontalPadding;
+	float meshBottomSide = (sp.GetPosition().y + (sp.GetSize().y)) - horizontalPadding;
 	if(meshRightSide > right)
 	{
-		sp.SetPosition({ right - sp.GetSize().x + verticalPadding, sp.GetPosition().y });// keep the y pos same and fix it to right
+		sp.SetPosition({ right - (sp.GetSize().x / 2) + verticalPadding, sp.GetPosition().y });// keep the y pos same and fix it to right
 	}
 	if (meshLeftSide < left)
 	{
-		sp.SetPosition({ left - verticalPadding , sp.GetPosition().y}); // keep the y pos same and fix it to left
+		sp.SetPosition({ left + (sp.GetSize().x / 2) - verticalPadding , sp.GetPosition().y}); // keep the y pos same and fix it to left
 	}
 	if (meshBottomSide > bottom)
 	{
-		sp.SetPosition({sp.GetPosition().x , bottom - sp.GetSize().y + horizontalPadding }); // keep the x pos same and fix it to bottom
+		sp.SetPosition({sp.GetPosition().x , bottom - (sp.GetSize().y ) + horizontalPadding }); // keep the x pos same and fix it to bottom
 	}
 	if (meshTopSide < top)
 	{
-		sp.SetPosition({sp.GetPosition().x, top - horizontalPadding }); // keep the x pos same and fix it to top
+		sp.SetPosition({sp.GetPosition().x, top + (sp.GetSize().y / 2) - horizontalPadding }); // keep the x pos same and fix it to top
 	}
 }
 

@@ -23,6 +23,10 @@ SpaceShip::SpaceShip(const sf::Vector2f& pos, const std::string& baseModel, cons
 	engine.setSize(base.getSize());
 	shield.setSize(base.getSize());
 
+	base.setOrigin(base.getSize() / 2.f);
+	engine.setOrigin(engine.getSize() / 2.f);
+	shield.setOrigin(shield.getSize() / 2.f);
+
 	base.setPosition(pos);
 	engine.setPosition(pos);
 	shield.setPosition(pos);
@@ -61,11 +65,23 @@ void SpaceShip::SetSize(const sf::Vector2f& in_size)
 	base.setSize(in_size);
 	engine.setSize(in_size);
 	shield.setSize(in_size);
+
+	// when resizing the origin will change, origin in my design is on center
+	base.setOrigin(base.getSize() / 2.f);
+	engine.setOrigin(engine.getSize() / 2.f);
+	shield.setOrigin(shield.getSize() / 2.f);
 }
 
 void SpaceShip::SetShieldState(bool in_state)
 {
 	IsShieldActive = in_state;
+}
+
+void SpaceShip::SetRotation(const sf::Angle& in_rot)
+{
+	base.setRotation(in_rot);
+	engine.setRotation(in_rot);
+	shield.setRotation(in_rot);
 }
 
 void SpaceShip::SetPosition(const sf::Vector2f& in_pos)
@@ -81,6 +97,11 @@ void SpaceShip::Draw(sf::RenderWindow& window)
 	window.draw(engine);
 	if(IsShieldActive)
 		window.draw(shield);
+}
+
+sf::Angle SpaceShip::GetRotation() const
+{
+	return base.getRotation();
 }
 
 sf::Vector2f SpaceShip::GetPosition() const
