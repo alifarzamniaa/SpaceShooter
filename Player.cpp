@@ -3,11 +3,12 @@
 
 Player::Player(const sf::Vector2f& pos)
 	:
-	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
+	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath,DestructionImgPath),
 	EngineAnim(64,64,8,0.1f),
 	ShieldAnim(64,64,10,0.09f),
 	BulletAnim(9,12,8,0.09f),
-	FiringAnim(64,64,9,0.03f)
+	FiringAnim(64,64,9,0.03f),
+	DestructionAnim(64,64,8,0.15f)
 {
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
@@ -23,27 +24,39 @@ Player::Player(const sf::Vector2f& pos)
 
 void Player::Draw(sf::RenderWindow& window)
 {
-	sp.Draw(window);
+	if(IsActive())
+		sp.Draw(window);
 }
 
 void Player::Update(float delta)
 {
-	EngineAnim.Update(delta);
-	sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
-	if (sp.GetShieldState())
+	if(IsActive())
 	{
-		ShieldAnim.Update(delta);
-		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
-	}
-	if (IsFiring)
-	{
-		FiringAnim.Update(delta);
-		sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
-		if(FiringAnim.IsAnimFinished())
+		//Checks if the health reaches 0 and destroy the ship
+		DestructionEvent(delta);
+		if(!IsDestroyed)
 		{
-			IsFiring = false;
+			EngineAnim.Update(delta);
+			sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
+			if (sp.GetShieldState())
+			{
+				ShieldAnim.Update(delta);
+				sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
+			}
+			if (IsFiring)
+			{
+				FiringAnim.Update(delta);
+				sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
+				if (FiringAnim.IsAnimFinished())
+				{
+					IsFiring = false;
+				}
+			}
 		}
+		
+		
 	}
+	
 }
 
 sf::Vector2f Player::GetPosition() const
@@ -130,6 +143,25 @@ void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2
 	if (meshTopSide < top)
 	{
 		sp.SetPosition({sp.GetPosition().x, top + (sp.GetSize().y / 2) - horizontalPadding }); // keep the x pos same and fix it to top
+	}
+}
+
+void Player::DestructionEvent(float delta)
+{
+	if (health <= 0 && !IsDestroyed)
+	{
+		sp.ActiveDestruction();
+		IsDestroyed = true;
+	}
+	if (IsDestroyed)
+	{
+		sp.SetEngineState(false);
+		DestructionAnim.Update(delta);
+		sp.UpdateBaseTexRect(DestructionAnim.GetCurrentFrame());
+		if (DestructionAnim.IsAnimFinished())
+		{
+			SetActive(false);
+		}
 	}
 }
 

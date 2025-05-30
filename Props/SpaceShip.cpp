@@ -1,6 +1,6 @@
 #include "SpaceShip.h"
 #include <iostream>
-SpaceShip::SpaceShip(const sf::Vector2f& pos, const std::string& baseModel, const std::string& engineModel, const std::string& shieldModel)
+SpaceShip::SpaceShip(const sf::Vector2f& pos, const std::string& baseModel, const std::string& engineModel, const std::string& shieldModel, const std::string& DestructionModel)
 {
 	if(!baseT.loadFromFile(baseModel))
 	{
@@ -14,7 +14,10 @@ SpaceShip::SpaceShip(const sf::Vector2f& pos, const std::string& baseModel, cons
 	{
 		std::cout << "!!!Loading Error : Could NOT load image for engine model!\n";
 	}
-	
+	if (!DestructionT.loadFromFile(DestructionModel))
+	{
+		std::cout << "destruction texture is NOT Loaded!!\n";
+	}
 	base.setTexture(&baseT);
 	engine.setTexture(&engineT);
 	shield.setTexture(&shieldT);
@@ -77,6 +80,16 @@ void SpaceShip::SetShieldState(bool in_state)
 	IsShieldActive = in_state;
 }
 
+void SpaceShip::SetEngineState(bool in_state)
+{
+	IsEngineActive = in_state;
+}
+
+void SpaceShip::ActiveDestruction()
+{
+	ChangeBaseModelTex(DestructionT);
+}
+
 void SpaceShip::SetRotation(const sf::Angle& in_rot)
 {
 	base.setRotation(in_rot);
@@ -94,7 +107,8 @@ void SpaceShip::SetPosition(const sf::Vector2f& in_pos)
 void SpaceShip::Draw(sf::RenderWindow& window)
 {
 	window.draw(base);
-	window.draw(engine);
+	if(IsEngineActive)
+		window.draw(engine);
 	if(IsShieldActive)
 		window.draw(shield);
 }
@@ -117,4 +131,9 @@ sf::Vector2f SpaceShip::GetSize() const
 bool SpaceShip::GetShieldState() const
 {
 	return IsShieldActive;
+}
+
+bool SpaceShip::GetEngineState() const
+{
+	return IsEngineActive;
 }

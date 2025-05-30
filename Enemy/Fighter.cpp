@@ -3,11 +3,15 @@
 
 Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& player)
 	:
-	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath),
-	EngineAnim(64, 64, 10, 0.1f),
-	ShieldAnim(64, 64, 10, 0.09f),
-	FiringAnim(64, 64, 6, 0.03f),
-	Enemy(window,player)
+	Enemy(window,player,pos,
+	{
+	{64, 64, 6, 0.03f, "Images/Enemy/TypeOne/Fighter/Base.png"},
+	{64, 64, 10, 0.1f, "Images/Enemy/TypeOne/Fighter/Engine.png"},
+	{64, 64, 10, 0.09f, "Images/Enemy/TypeOne/Fighter/Shield.png"},
+	{64, 64, 8, 0.15f, "Images/Enemy/TypeOne/Fighter/Destruction.png"},
+	100, // health
+	400 // speed
+	})
 {
 	ListOFActions.emplace_back(std::make_unique<Roam>(this,5.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
 	AI = std::make_unique<EnemyAI>(ListOFActions);
@@ -21,30 +25,57 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 
 void Fighter::Draw(sf::RenderWindow& window)
 {
-	sp.Draw(window);
+	if (IsActive())
+		sp.Draw(window);
 }
 
 void Fighter::Update(float delta)
 {
-	AI->Update(delta);
-	EngineAnim.Update(delta);
-	sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
-	if (sp.GetShieldState())
+	
+	if(IsActive())
 	{
-		ShieldAnim.Update(delta);
-		sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
-	}
-	if (IsFiring)
-	{
-		FiringAnim.Update(delta);
-		sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
-		if (FiringAnim.IsAnimFinished())
+		AI->Update(delta);
+		DestructionEvent(delta);
+		if(!IsDestroyed())
 		{
-			IsFiring = false;
+			EngineAnim.Update(delta);
+			sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
+			if (sp.GetShieldState())
+			{
+				ShieldAnim.Update(delta);
+				sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
+			}
+			if (IsFiring)
+			{
+				FiringAnim.Update(delta);
+				sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
+				if (FiringAnim.IsAnimFinished())
+				{
+					IsFiring = false;
+				}
+			}
+		}
+	}
+	
+}
+void Fighter::DestructionEvent(float delta)
+{
+	if (health <= 0 && !IsDestroyed())
+	{
+		sp.ActiveDestruction();
+		SetDestroyedState(true);
+	}
+	if (IsDestroyed())
+	{
+		sp.SetEngineState(false);
+		DestructionAnim.Update(delta);
+		sp.UpdateBaseTexRect(DestructionAnim.GetCurrentFrame());
+		if (DestructionAnim.IsAnimFinished())
+		{
+			SetActive(false);
 		}
 	}
 }
-
 void Fighter::SetShieldState(bool in_State)
 {
 	sp.SetShieldState(in_State);

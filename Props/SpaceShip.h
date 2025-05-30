@@ -4,7 +4,7 @@ class SpaceShip
 {
 public:
 	//constructor
-	SpaceShip(const sf::Vector2f& pos,const std::string& baseModel, const std::string& engineModel,const std::string& shieldModel);
+	SpaceShip(const sf::Vector2f& pos,const std::string& baseModel, const std::string& engineModel,const std::string& shieldModel,const std::string& DestructionModel);
 
 	//changing texture for each part
 	void ChangeBaseModelTex(const sf::Texture& tex);
@@ -18,6 +18,8 @@ public:
 
 	//chaning state of the spaceship
 	void SetShieldState(bool in_state);
+	void SetEngineState(bool in_state);
+	void ActiveDestruction();
 	void SetRotation(const sf::Angle& in_rot);
 	void SetPosition(const sf::Vector2f& in_pos);
 	void SetSize(const sf::Vector2f& in_size);
@@ -27,6 +29,7 @@ public:
 	sf::Vector2f GetPosition() const;
 	sf::Vector2f GetSize() const;
 	bool GetShieldState() const;
+	bool GetEngineState() const;
 	
 	void Draw(sf::RenderWindow& window);
 	
@@ -38,6 +41,9 @@ private:
 	sf::Texture baseT;
 	sf::Texture engineT;
 	sf::Texture shieldT;
+	sf::Texture DestructionT;
 
 	bool IsShieldActive = false;
+	bool IsEngineActive = true;
+	bool IsDestructionActive = true;
 };

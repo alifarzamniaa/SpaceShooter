@@ -23,6 +23,7 @@ public:
 
 	void Movement(float delta, const sf::Vector2f& leftRightBound, const sf::Vector2f& TopBottomBound);
 	void WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound);
+	void DestructionEvent(float delta);
 	void Actions(float delta, Pool& bulletPool, std::optional<sf::Event> e);
 	
 	sf::Texture& GetBulletTex();
@@ -33,6 +34,7 @@ private:
 	std::string BaseImgPath = "Images/Player/Weapon.png";
 	std::string EngineImgPath = "Images/Player/Engine.png";
 	std::string ShieldImgPath = "Images/Player/Shield.png";
+	std::string DestructionImgPath = "Images/Player/Destruction.png";
 	std::string BulletImgPath = "Images/Bullets/PlayerBullet.png";
 
 	//this is used for if texture is smaller than the box, you can adjust the gap between box and texture to make collision more accurate
@@ -46,12 +48,11 @@ private:
 	float speed = 500.f;
 	float ShieldCooldown = 20.f; // in seconds
 	float ShieldDuration = 5.f; // in seconds
-	bool ActiveState = true;
-	bool IsFiring = false;
 	//change its value on constructor
 	sf::Vector2f LBulletSocket = sf::Vector2f(-20.f, -15.f); // left Socket
 	sf::Vector2f RBulletSocket = sf::Vector2f(5.f, -15.f); // Right Socket
-	
+
+	//==========================================================================
 	//obj
 	SpaceShip sp;
 	sf::Texture BulletTex;
@@ -59,5 +60,11 @@ private:
 	Animation EngineAnim;
 	Animation ShieldAnim;
 	Animation BulletAnim;
+	Animation DestructionAnim;
+
+
+	bool ActiveState = true;
+	bool IsFiring = false;
+	bool IsDestroyed = false;
 };
 
