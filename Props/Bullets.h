@@ -17,6 +17,9 @@ public:
 	void SetPosition(float x, float y) override;
 	void SetSize(float width, float height) override;
 
+	void SetDestroyedState(bool in_State) override;
+	bool IsDestroyed() const override;
+
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
 private:
@@ -26,6 +29,6 @@ private:
 	bool ActiveState = false;
 	// direction : false make it move upwards , true make it downwards;
 	bool Direction = false;
-
+	bool Destroyed = false;
 };
 

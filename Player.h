@@ -21,6 +21,18 @@ public:
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
 
+	void SetDestroyedState(bool in_State) override;
+	bool IsDestroyed() const override;
+	
+	void SetFiringState(bool in_State) ;
+	bool IsFiring() const;
+
+	float GetSpeed() const;
+	int GetHealth() const;
+
+	void SetSpeed(float in_val);
+	void SetHealth(int in_val);
+
 	void Movement(float delta, const sf::Vector2f& leftRightBound, const sf::Vector2f& TopBottomBound);
 	void WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound);
 	void DestructionEvent(float delta);
@@ -41,7 +53,6 @@ private:
 	float verticalPadding = 20.f;
 	// same as vertical but for horizontal part
 	float horizontalPadding = 15.f;
-
 
 	int health = 100;
 	float playerShipSize = 100.f;
@@ -64,7 +75,7 @@ private:
 
 
 	bool ActiveState = true;
-	bool IsFiring = false;
-	bool IsDestroyed = false;
+	bool Firing = false;
+	bool Destroyed = false;
 };
 

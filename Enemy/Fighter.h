@@ -1,7 +1,6 @@
 #pragma once
 #include "Enemy.h"
 #include "../AI/EnemyAI.h"
-#include "../AI/Actions/Roam.h"
 #include "../Props/SpaceShip.h"
 #include "../Animation.h"
 class Fighter : public Enemy
@@ -14,6 +13,8 @@ public:
 	void SetShieldState(bool in_State) override;
 	void SetDestroyedState(bool in_State) override;
 	bool IsDestroyed() const override;
+	void SetFiringState(bool in_State) override;
+	bool IsFiring() const override;
 
 	sf::Vector2f GetPosition() const override;
 	sf::Vector2f GetSize() const override;
@@ -33,6 +34,12 @@ public:
 	// in case the texture size doesn't match the visual rectangle size.
 	// returns 0 if texture is the same size as the rectangle
 	float GetTextureOffsetY() const override;
+
+	float GetSpeed() const override;
+	int GetHealth() const override;
+	void SetSpeed(float in_val) override;
+	void SetHealth(int in_val) override;
+	bool IsInWallBoundary() const override;
 private:
 	// logic for destruction and when health is <= 0 
 	void DestructionEvent(float delta) override;
@@ -50,7 +57,7 @@ private:
 	std::unique_ptr<EnemyAI> AI;
 	std::vector<std::shared_ptr<AIAction>> ListOFActions;
 
-	bool IsFiring = false;
+	bool Firing = false;
 	bool ActiveState = true;
 	bool Destroyed = false;
 	float Dir;

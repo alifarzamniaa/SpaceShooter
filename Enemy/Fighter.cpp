@@ -1,4 +1,6 @@
 #include "Fighter.h"
+#include "../AI/Actions/Roam.h"
+#include "../AI/Actions/MoveTo.h"
 #include <math.h>
 
 Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& player)
@@ -14,6 +16,7 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	})
 {
 	ListOFActions.emplace_back(std::make_unique<Roam>(this,5.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
+	ListOFActions.emplace_back(std::make_unique<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, player.GetPosition().y); }));
 	AI = std::make_unique<EnemyAI>(ListOFActions);
 
 	sp.SetSize({ 128,128 });
@@ -45,13 +48,13 @@ void Fighter::Update(float delta)
 				ShieldAnim.Update(delta);
 				sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
 			}
-			if (IsFiring)
+			if (IsFiring())
 			{
 				FiringAnim.Update(delta);
 				sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
 				if (FiringAnim.IsAnimFinished())
 				{
-					IsFiring = false;
+					SetFiringState(false);
 				}
 			}
 		}
@@ -60,7 +63,7 @@ void Fighter::Update(float delta)
 }
 void Fighter::DestructionEvent(float delta)
 {
-	if (health <= 0 && !IsDestroyed())
+	if (GetHealth() <= 0 && !IsDestroyed())
 	{
 		sp.ActiveDestruction();
 		SetDestroyedState(true);
@@ -89,6 +92,16 @@ void Fighter::SetDestroyedState(bool in_State)
 bool Fighter::IsDestroyed() const
 {
 	return Destroyed;
+}
+
+void Fighter::SetFiringState(bool in_State)
+{
+	Firing = in_State;
+}
+
+bool Fighter::IsFiring() const
+{
+	return Firing;
 }
 
 
@@ -130,4 +143,37 @@ float Fighter::GetTextureOffsetX() const
 float Fighter::GetTextureOffsetY() const
 {
 	return YTextureOffset;
+}
+
+float Fighter::GetSpeed() const
+{
+	return speed;
+}
+
+int Fighter::GetHealth() const
+{
+	return health;
+}
+
+void Fighter::SetSpeed(float in_val)
+{
+	speed = in_val;
+}
+
+void Fighter::SetHealth(int in_val)
+{
+	health = in_val;
+}
+
+bool Fighter::IsInWallBoundary() const
+{
+	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
+	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
+	float top = GetPosition().y - GetSize().y / 2.f + GetTextureOffsetY();
+	float bottom = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
+
+	float winWidth = (float)windowRef.getSize().x;
+	float winHeight = (float)windowRef.getSize().y;
+
+	return left >= 0 && right <= winWidth && top >= 0 && bottom <= winHeight;
 }

@@ -14,4 +14,8 @@ public:
 
 	virtual bool IsActive() const = 0;
 	virtual void SetActive(bool in_state) = 0;
+
+	virtual void SetDestroyedState(bool in_State) = 0;
+	virtual bool IsDestroyed() const = 0;
+
 };

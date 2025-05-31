@@ -46,8 +46,6 @@ public:
 	{
 	};
 	virtual void SetShieldState(bool in_State) = 0;
-	virtual void SetDestroyedState(bool in_State) = 0;
-	virtual bool IsDestroyed() const = 0;
 	// Returns the horizontal offset needed for accurate collision detection,
 	// in case the texture size doesn't match the visual rectangle size.
 	// returns 0 if texture is the same size as the rectangle
@@ -56,7 +54,16 @@ public:
 	// in case the texture size doesn't match the visual rectangle size.
 	// returns 0 if texture is the same size as the rectangle
 	virtual float GetTextureOffsetY() const = 0;
+	
+	virtual void SetFiringState(bool in_State) = 0;
+	virtual bool IsFiring() const = 0;
 
+	virtual float GetSpeed() const = 0;
+	virtual int GetHealth() const = 0;
+
+	virtual void SetSpeed(float in_val) = 0;
+	virtual void SetHealth(int in_val) = 0;
+	virtual bool IsInWallBoundary() const = 0; 
 	virtual ~Enemy() = default;
 protected:
 	// logic for destruction and when health is <= 0 
@@ -72,7 +79,7 @@ protected:
 	Animation ShieldAnim;
 	Animation DestructionAnim;
 
-	float health;
+	int health;
 	float speed;
 
 	sf::RenderWindow& windowRef;

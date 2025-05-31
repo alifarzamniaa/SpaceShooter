@@ -34,7 +34,7 @@ void Player::Update(float delta)
 	{
 		//Checks if the health reaches 0 and destroy the ship
 		DestructionEvent(delta);
-		if(!IsDestroyed)
+		if(!IsDestroyed())
 		{
 			EngineAnim.Update(delta);
 			sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
@@ -43,13 +43,13 @@ void Player::Update(float delta)
 				ShieldAnim.Update(delta);
 				sp.UpdateShieldTexRect(ShieldAnim.GetCurrentFrame());
 			}
-			if (IsFiring)
+			if (IsFiring())
 			{
 				FiringAnim.Update(delta);
 				sp.UpdateBaseTexRect(FiringAnim.GetCurrentFrame());
 				if (FiringAnim.IsAnimFinished())
 				{
-					IsFiring = false;
+					SetFiringState(false);
 				}
 			}
 		}
@@ -87,6 +87,46 @@ bool Player::IsActive() const
 void Player::SetActive(bool in_state)
 {
 	ActiveState = in_state;
+}
+
+void Player::SetDestroyedState(bool in_State)
+{
+	Destroyed = in_State;
+}
+
+bool Player::IsDestroyed() const
+{
+	return Destroyed;
+}
+
+void Player::SetFiringState(bool in_State)
+{
+	Firing = in_State;
+}
+
+bool Player::IsFiring() const
+{
+	return Firing;
+}
+
+float Player::GetSpeed() const
+{
+	return speed;
+}
+
+int Player::GetHealth() const
+{
+	return health;
+}
+
+void Player::SetSpeed(float in_val)
+{
+	speed = in_val;
+}
+
+void Player::SetHealth(int in_val)
+{
+	health = in_val;
 }
 
 void Player::Movement(float delta,const sf::Vector2f& leftRightBound, const sf::Vector2f& topBottomBound)
@@ -148,12 +188,12 @@ void Player::WallCollision(const sf::Vector2f& leftRightBound, const sf::Vector2
 
 void Player::DestructionEvent(float delta)
 {
-	if (health <= 0 && !IsDestroyed)
+	if (health <= 0 && !IsDestroyed())
 	{
 		sp.ActiveDestruction();
-		IsDestroyed = true;
+		SetDestroyedState(true);
 	}
-	if (IsDestroyed)
+	if (IsDestroyed())
 	{
 		sp.SetEngineState(false);
 		DestructionAnim.Update(delta);
@@ -174,7 +214,7 @@ void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
 	// if mouse is pressed and it is left mouse button
 	if (const auto* mouseButtonPressed = e->getIf<sf::Event::MouseButtonPressed>())
 	{
-		IsFiring = true;
+		SetFiringState(true);
 		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 		{
 			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());

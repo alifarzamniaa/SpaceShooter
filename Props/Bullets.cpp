@@ -36,6 +36,16 @@ void Bullets::SetSize(float width, float height)
 	bullet.setSize(sf::Vector2f{width,height});
 }
 
+void Bullets::SetDestroyedState(bool in_State)
+{
+	Destroyed = in_State;
+}
+
+bool Bullets::IsDestroyed() const
+{
+	return Destroyed;
+}
+
 void Bullets::SetPosition(float x,float y)
 {
 	bullet.setPosition({x,y});

@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\Actions\MoveTo.cpp" />
     <ClCompile Include="AI\Actions\Roam.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Background.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="Props\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\Actions\MoveTo.h" />
     <ClInclude Include="AI\Actions\Roam.h" />
     <ClInclude Include="AI\AIAction.h" />
     <ClInclude Include="Animation.h" />
