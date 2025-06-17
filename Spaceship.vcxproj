@@ -157,6 +157,7 @@
     <ClCompile Include="Props\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\Actions\FireAction.h" />
     <ClInclude Include="AI\Actions\MoveTo.h" />
     <ClInclude Include="AI\Actions\Roam.h" />
     <ClInclude Include="AI\AIAction.h" />

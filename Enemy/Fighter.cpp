@@ -15,8 +15,8 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	400 // speed
 	})
 {
-	ListOFActions.emplace_back(std::make_unique<Roam>(this,5.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
-	ListOFActions.emplace_back(std::make_unique<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, player.GetPosition().y); }));
+	ListOFActions.emplace_back(std::make_shared<Roam>(this,5.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
+	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	AI = std::make_unique<EnemyAI>(ListOFActions);
 
 	sp.SetSize({ 128,128 });

@@ -20,7 +20,7 @@ public:
 	// state of the current task
 	bool IsFinished() override;
 private:
-	std::unique_ptr<Enemy> AttachedEntity; // this gets the entity that this action is attached to it
+	Enemy* AttachedEntity; // this gets the entity that this action is attached to it
 	float Duration;
 	float Elapsed;
 	float RangeX;

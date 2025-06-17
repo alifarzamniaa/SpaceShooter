@@ -18,7 +18,6 @@ void Bullets::Update(float delta)
 	//negative shoots upward , positive shoot downward
 	float vel = Direction ? speed * delta : -speed * delta;
 	bullet.move(sf::Vector2f{ 0,vel });
-
 	//disabled when out of screen
 	if(GetPosition().y < 0)
 		SetActive(false);

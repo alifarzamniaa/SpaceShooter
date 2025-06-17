@@ -17,8 +17,8 @@ void Roam::Start()
 {
     ActiveState = true;
     Elapsed = 0.0f;
+    InitPosX = AttachedEntity->GetPosition().x;
     Dir = 1; //goes right
-    std::cout << "NOW Roam Starts\n\n";
 }
 
 void Roam::Update(float delta)

@@ -19,7 +19,8 @@ void MoveTo::Update(float delta)
 {
 	if(AttachedEntity && IsActiveState)
 	{
-		sf::Vector2f vel = Dir.normalized() * speed * delta;
+		auto NormalizedDir = Dir.length() != 0.0f ? Dir.normalized() : sf::Vector2f(0.0f,0.0f);
+		sf::Vector2f vel = NormalizedDir * speed * delta;
 		sf::Vector2f distance = locToMove - AttachedEntity->GetPosition();
 		AttachedEntity->SetPosition(AttachedEntity->GetPosition().x + vel.x, AttachedEntity->GetPosition().y + vel.y);
 		if(distance.length() < 1.f || !AttachedEntity->IsInWallBoundary())
