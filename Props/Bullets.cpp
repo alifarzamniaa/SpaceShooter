@@ -1,14 +1,19 @@
 #include "Bullets.h"
+#include <iostream>
 
-Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, bool Dir)
+Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, int windowHeight, bool Dir)
 	:
 	bulletAnim(bulletAnim),
 	speed(fireSpeed),
-	Direction(Dir)
+	Direction(Dir),
+	windowHeight(windowHeight)
 {
 	bullet.setSize({width,height});
 	bullet.setTexture(&bulletModel);
 	bullet.setTextureRect(TexRect);
+	bullet.setOrigin(bullet.getSize() / 2.f);
+	if(Direction)
+		bullet.setRotation(sf::degrees(180.f));
 }
 
 void Bullets::Update(float delta)
@@ -19,7 +24,7 @@ void Bullets::Update(float delta)
 	float vel = Direction ? speed * delta : -speed * delta;
 	bullet.move(sf::Vector2f{ 0,vel });
 	//disabled when out of screen
-	if(GetPosition().y < 0)
+	if(GetPosition().y < 0 || GetPosition().y >= windowHeight)
 		SetActive(false);
 }
 

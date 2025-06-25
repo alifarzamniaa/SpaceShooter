@@ -6,7 +6,8 @@ class Animation
 public:
 	Animation(int width,int height,int FrameCount,float animDuration);
 	void Update(float delta);
-	sf::IntRect GetCurrentFrame();
+	sf::IntRect GetCurrentFrame() const;
+	int GetCurrentIndex() const;
 	bool IsAnimFinished() const;
 private:
 	std::vector<sf::IntRect> Frames;

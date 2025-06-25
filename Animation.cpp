@@ -32,9 +32,14 @@ void Animation::Update(float delta)
 	}
 }
 
-sf::IntRect Animation::GetCurrentFrame()
+sf::IntRect Animation::GetCurrentFrame() const
 {
 	return Frames[CurrentFrameIndex];
+}
+
+int Animation::GetCurrentIndex() const
+{
+	return CurrentFrameIndex;
 }
 
 bool Animation::IsAnimFinished() const

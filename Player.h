@@ -60,8 +60,8 @@ private:
 	float ShieldCooldown = 20.f; // in seconds
 	float ShieldDuration = 5.f; // in seconds
 	//change its value on constructor
-	sf::Vector2f LBulletSocket = sf::Vector2f(-20.f, -15.f); // left Socket
-	sf::Vector2f RBulletSocket = sf::Vector2f(5.f, -15.f); // Right Socket
+	sf::Vector2f LBulletSocket = sf::Vector2f(-10.f, -15.f); // left Socket
+	sf::Vector2f RBulletSocket = sf::Vector2f(10.f, -15.f); // Right Socket
 
 	//==========================================================================
 	//obj

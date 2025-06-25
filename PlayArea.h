@@ -4,7 +4,7 @@
 #include "Props/Pool.h"
 #include "Props/Bullets.h"
 #include "background.h"
-#include "Enemy/Fighter.h"
+#include "Enemy/Type1/Fighter.h"
 class PlayArea
 {
 public:
@@ -17,6 +17,7 @@ private:
 	Player player;
 	Background bg;
 	Pool playerBulletPool;
+	Pool fighterBulletPool;
 	Fighter f1;
 };
 

@@ -6,11 +6,11 @@ class Bullets : public Entity
 {
 public:
 	// direction : false make it move upwards , true make it downwards;
-	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, bool Dir = false);
+	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, int windowHeight,bool Dir = false);
 	
 	void Update(float delta) override; 
 	void Draw(sf::RenderWindow& window) override;
-
+	
 	sf::Vector2f GetPosition() const override;
 	sf::Vector2f GetSize() const override;
 
@@ -30,5 +30,6 @@ private:
 	// direction : false make it move upwards , true make it downwards;
 	bool Direction = false;
 	bool Destroyed = false;
+	int windowHeight;
 };
 

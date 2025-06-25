@@ -4,16 +4,24 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	:
 	window(window),
 	playerBulletPool(PlayerBulletSize),
+	fighterBulletPool(100),
 	player({600.f,600.f}),
 	bg(window,200.f),
-	f1({200.f,100.f},window,player)
+	f1({200.f,100.f},window,player,fighterBulletPool)
 {
 	for(int i = 0; i < playerBulletPool.GetSize();i++)
 	{
 		playerBulletPool.AddEntity(
-			std::make_unique<Bullets>(15,15,player.GetBulletTex(),player.GetBulletAnim(), sf::IntRect({ 0,0 }, { 9,12 }),800.f)
+			std::make_unique<Bullets>(15,15,player.GetBulletTex(),player.GetBulletAnim(), sf::IntRect({ 0,0 }, { 9,12 }),800.f,window.getSize().y)
 		);
 	}
+	for(int i = 0; i < fighterBulletPool.GetSize();i++)
+	{
+		fighterBulletPool.AddEntity(
+			std::make_unique<Bullets>(15,15,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y,true)
+		);
+	}
+
 }
 
 void PlayArea::Draw()
@@ -24,6 +32,11 @@ void PlayArea::Draw()
 	{
 		if (e)
 			e->Draw(window);
+	}
+	for (auto& f : fighterBulletPool.GetActiveItem())
+	{
+		if (f)
+			f->Draw(window);
 	}
 	f1.Draw(window);
 }
@@ -38,6 +51,11 @@ void PlayArea::Update(float delta)
 	for(auto& e : playerBulletPool.GetActiveItem())
 	{
 		if(e)
+			e->Update(delta);
+	}
+	for (auto& e : fighterBulletPool.GetActiveItem())
+	{
+		if (e)
 			e->Update(delta);
 	}
 }
