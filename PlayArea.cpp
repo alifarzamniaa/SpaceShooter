@@ -7,7 +7,7 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	fighterBulletPool(100),
 	player({600.f,600.f}),
 	bg(window,200.f),
-	f1({200.f,100.f},window,player,fighterBulletPool)
+	f1({200.f,200.f},window,player,fighterBulletPool)
 {
 	for(int i = 0; i < playerBulletPool.GetSize();i++)
 	{
@@ -18,7 +18,7 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	for(int i = 0; i < fighterBulletPool.GetSize();i++)
 	{
 		fighterBulletPool.AddEntity(
-			std::make_unique<Bullets>(15,15,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y,true)
+			std::make_unique<Bullets>(15,15,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y)
 		);
 	}
 

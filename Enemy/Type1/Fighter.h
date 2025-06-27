@@ -16,6 +16,7 @@ public:
 	void SetFiringState(bool in_State) override;
 	bool IsFiring() const override;
 	void RetrieveBullet() override;
+	void AIBehaviour() override;
 
 	sf::Vector2f GetPosition() const override;
 	sf::Vector2f GetSize() const override;
@@ -50,6 +51,8 @@ public:
 	std::vector<Bullets*>& GetBullets() override;
 	sf::Texture& GetBulletTex() override;
 	Animation GetBulletAnim() const override;
+
+	bool GetShootDir() const override;
 private:
 	// logic for destruction and when health is <= 0 
 	void DestructionEvent(float delta) override;
@@ -73,5 +76,6 @@ private:
 	bool Firing = false;
 	bool ActiveState = true;
 	bool Destroyed = false;
+	bool ShootingDir = false; // false means upward
 };
 

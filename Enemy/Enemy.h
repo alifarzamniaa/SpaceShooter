@@ -67,13 +67,14 @@ public:
 	virtual void SetFiringState(bool in_State) = 0;
 	virtual bool IsFiring() const = 0;
 	virtual void RetrieveBullet() = 0;
-
+	virtual void AIBehaviour() = 0;
 	virtual float GetSpeed() const = 0;
 	virtual int GetHealth() const = 0;
 
 	virtual void SetSpeed(float in_val) = 0;
 	virtual void SetHealth(int in_val) = 0;
-	virtual bool IsInWallBoundary() const = 0; 
+	virtual bool IsInWallBoundary() const = 0;
+	virtual bool GetShootDir() const = 0;
 	virtual int GetFireCurrentFrame() const = 0;
 	virtual std::vector<sf::Vector2f> GetSockets() const = 0;
 	virtual std::vector<int> GetFrameOfFire() const = 0;

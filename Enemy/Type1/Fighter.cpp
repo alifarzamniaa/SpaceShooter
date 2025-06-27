@@ -18,6 +18,14 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	400 // speed
 	})
 {
+
+	//Socket Positions
+	BulletsSocket.push_back({ -10.f,15.f }); // left socket
+	BulletsSocket.push_back({ 10.f,15.f }); // right socket
+	FrameOfFire.push_back(2);// fires at frame 2
+	FrameOfFire.push_back(4);// same at 4
+
+
 	ListOFActions.emplace_back(std::make_shared<Roam>(this,3.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
@@ -33,11 +41,7 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	sp.UpdateShieldTexRect(sf::IntRect({ 0, 0 }, { 64,64 }));
 
 
-	//Socket Positions
-	BulletsSocket.push_back({-10.f,15.f}); // left socket
-	BulletsSocket.push_back({10.f,15.f}); // right socket
-	FrameOfFire.push_back(2);// fires at frame 2
-	FrameOfFire.push_back(4);// same at 4
+	
 }
 
 void Fighter::Draw(sf::RenderWindow& window)
@@ -52,6 +56,7 @@ void Fighter::Update(float delta)
 	if(IsActive())
 	{
 		AI->Update(delta);
+		AIBehaviour();
 		DestructionEvent(delta);
 		if(!IsDestroyed())
 		{
@@ -127,6 +132,20 @@ void Fighter::RetrieveBullet()
 	for (int i = 0; i < BulletsSocket.size(); i++)
 	{
 		BulletList.push_back(dynamic_cast<Bullets*>(BulletPool.GetFreeEntity()));
+	}
+}
+
+void Fighter::AIBehaviour()
+{
+	if(player.GetPosition().y < GetPosition().y && ShootingDir)
+	{
+		ShootingDir = false;
+		sp.SetRotation(sf::degrees(0));
+	}
+	if (player.GetPosition().y > GetPosition().y && !ShootingDir)
+	{
+		ShootingDir = true;
+		sp.SetRotation(sf::degrees(180));
 	}
 }
 
@@ -231,4 +250,9 @@ sf::Texture& Fighter::GetBulletTex()
 Animation Fighter::GetBulletAnim() const
 {
 	return BulletAnim;
+}
+
+bool Fighter::GetShootDir() const
+{
+	return ShootingDir;
 }

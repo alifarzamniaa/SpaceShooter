@@ -8,7 +8,7 @@ EnemyAI::EnemyAI(std::vector<std::shared_ptr<AIAction>>& ListOfActions)
 }
 void EnemyAI::Update(float dt)
 {	
-	if(actions.size() == 0)
+	if(actions.size() == 0 && !CurrentAction)
 	{
 		for(auto& a : actionsList)
 		{
@@ -34,4 +34,25 @@ void EnemyAI::Update(float dt)
 		}
 	}
 	
+}
+
+void EnemyAI::CancelCurrentAction()
+{
+	if(CurrentAction)
+		CurrentAction->Cancel();
+}
+
+void EnemyAI::AddTempAction(AIAction* Action)
+{
+	if(Action)
+	{
+		CancelCurrentAction();
+		CurrentAction = nullptr;
+		CurrentAction = Action;
+		CurrentAction->Start();
+	}else
+	{
+		std::cout << "!!NOT A Valid Action\n";
+	}
+
 }
