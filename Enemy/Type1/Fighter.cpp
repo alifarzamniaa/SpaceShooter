@@ -252,7 +252,21 @@ Animation Fighter::GetBulletAnim() const
 	return BulletAnim;
 }
 
+std::string Fighter::GetTag() const
+{
+	return Tag;
+}
+
 bool Fighter::GetShootDir() const
 {
 	return ShootingDir;
+}
+std::vector<sf::Vector2i>& Fighter::GetLastOccupied()
+{
+	return LastOccupied;
+}
+
+void Fighter::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
+{
+	LastOccupied = occupiedSpace;
 }

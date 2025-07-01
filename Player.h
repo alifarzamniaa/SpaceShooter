@@ -4,7 +4,8 @@
 #include "Props/SpaceShip.h"
 #include "Animation.h"
 #include "Props/Bullets.h"
-#include "Props/pool.h"
+#include "Props/Pool.h"
+#include "Props/Grid.h"
 class Player : public Entity
 {
 public:
@@ -23,7 +24,7 @@ public:
 
 	void SetDestroyedState(bool in_State) override;
 	bool IsDestroyed() const override;
-	
+	void OnHit(Grid& grid);
 	void SetFiringState(bool in_State) ;
 	bool IsFiring() const;
 
@@ -40,7 +41,10 @@ public:
 	
 	sf::Texture& GetBulletTex();
 	Animation GetBulletAnim();
-	
+
+	std::vector<sf::Vector2i>& GetLastOccupied() override;
+	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
+	std::string GetTag() const override;
 private:
 	//Custom Properties
 	std::string BaseImgPath = "Images/Player/Weapon.png";
@@ -49,6 +53,7 @@ private:
 	std::string DestructionImgPath = "Images/Player/Destruction.png";
 	std::string BulletImgPath = "Images/Bullets/PlayerBullet.png";
 
+	std::string Tag = "Player";
 	//this is used for if texture is smaller than the box, you can adjust the gap between box and texture to make collision more accurate
 	float verticalPadding = 20.f;
 	// same as vertical but for horizontal part
@@ -72,7 +77,7 @@ private:
 	Animation ShieldAnim;
 	Animation BulletAnim;
 	Animation DestructionAnim;
-
+	std::vector<sf::Vector2i> LastOccupied;
 
 	bool ActiveState = true;
 	bool Firing = false;

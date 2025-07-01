@@ -51,6 +51,9 @@
     <ClCompile Include="AI\Actions\FireAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Props\Grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -96,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AI\Actions\FireAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Props\Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

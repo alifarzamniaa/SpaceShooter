@@ -1,11 +1,12 @@
 #include "Bullets.h"
 #include <iostream>
 
-Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, int windowHeight)
+Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, int windowHeight,const std::string& Tag)
 	:
 	bulletAnim(bulletAnim),
 	speed(fireSpeed),
-	windowHeight(windowHeight)
+	windowHeight(windowHeight),
+	Tag(Tag)
 {
 	bullet.setSize({width,height});
 	bullet.setTexture(&bulletModel);
@@ -74,6 +75,11 @@ void Bullets::SetDirection(bool in_val)
 	Direction = in_val;
 }
 
+std::string Bullets::GetTag() const
+{
+	return Tag;
+}
+
 sf::Vector2f Bullets::GetPosition() const
 {
 	return bullet.getPosition();
@@ -87,4 +93,13 @@ sf::Vector2f Bullets::GetSize() const
 bool Bullets::IsActive() const
 {
 	return ActiveState;
+}
+std::vector<sf::Vector2i>& Bullets::GetLastOccupied()
+{
+	return LastOccupied;
+}
+
+void Bullets::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
+{
+	LastOccupied = occupiedSpace;
 }

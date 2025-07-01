@@ -27,7 +27,8 @@ public:
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
 
-
+	std::vector<sf::Vector2i>& GetLastOccupied() override;
+	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	// Returns the horizontal offset needed for accurate collision detection,
 	// in case the texture size doesn't match the visual rectangle size.
 	// returns 0 if texture is the same size as the rectangle
@@ -51,6 +52,7 @@ public:
 	std::vector<Bullets*>& GetBullets() override;
 	sf::Texture& GetBulletTex() override;
 	Animation GetBulletAnim() const override;
+	std::string GetTag() const override;
 
 	bool GetShootDir() const override;
 private:
@@ -72,7 +74,8 @@ private:
 	std::vector<std::shared_ptr<AIAction>> ListOFActions;
 	std::vector<Bullets*> BulletList;
 	std::vector<int> FrameOfFire; //each index is the index of frame that missle or bullet will be fired (has to be in order that fire happens)
-
+	std::vector<sf::Vector2i> LastOccupied;
+	std::string Tag = "Enemy";
 	bool Firing = false;
 	bool ActiveState = true;
 	bool Destroyed = false;

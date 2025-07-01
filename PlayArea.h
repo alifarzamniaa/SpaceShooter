@@ -5,6 +5,7 @@
 #include "Props/Bullets.h"
 #include "background.h"
 #include "Enemy/Type1/Fighter.h"
+#include "Props/Grid.h"
 class PlayArea
 {
 public:
@@ -19,5 +20,7 @@ private:
 	Pool playerBulletPool;
 	Pool fighterBulletPool;
 	Fighter f1;
+	Grid grid;
+	float Timer = 0.0f;
 };
 

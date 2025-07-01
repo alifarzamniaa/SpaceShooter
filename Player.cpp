@@ -53,8 +53,6 @@ void Player::Update(float delta)
 				}
 			}
 		}
-		
-		
 	}
 	
 }
@@ -97,6 +95,15 @@ void Player::SetDestroyedState(bool in_State)
 bool Player::IsDestroyed() const
 {
 	return Destroyed;
+}
+
+void Player::OnHit(Grid& grid)
+{	
+	if(grid.IsEntityCollides(*this))
+	{
+		health -= 10;
+		std::cout << "health : " << health << '\n';
+	}
 }
 
 void Player::SetFiringState(bool in_State)
@@ -244,4 +251,19 @@ sf::Texture& Player::GetBulletTex()
 Animation Player::GetBulletAnim()
 {
 	return BulletAnim;
+}
+
+std::vector<sf::Vector2i>& Player::GetLastOccupied()
+{
+	return LastOccupied;
+}
+
+void Player::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
+{
+	LastOccupied = occupiedSpace;
+}
+
+std::string Player::GetTag() const
+{
+	return Tag;
 }

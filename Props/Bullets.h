@@ -6,7 +6,7 @@ class Bullets : public Entity
 {
 public:
 	// direction : false make it move upwards , true make it downwards;
-	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, int windowHeight);
+	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, int windowHeight,const std::string& tag);
 	
 	void Update(float delta) override; 
 	void Draw(sf::RenderWindow& window) override;
@@ -22,16 +22,22 @@ public:
 
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
+	std::vector<sf::Vector2i>& GetLastOccupied() override;
+	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	bool GetDirection() const;
 	void SetDirection(bool in_val);
+	std::string GetTag() const override;
+
 private:
 	sf::RectangleShape bullet;
 	Animation bulletAnim;
+	std::vector<sf::Vector2i> LastOccupied;
 	float speed = 100.f;
 	bool ActiveState = false;
 	// direction : false make it move upwards , true make it downwards;
 	bool Direction = false;
 	bool Destroyed = false;
 	int windowHeight;
+	std::string Tag;
 };
 
