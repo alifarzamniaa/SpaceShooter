@@ -1,27 +1,50 @@
 #include "Bullets.h"
 #include <iostream>
 
-Bullets::Bullets(float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, int windowHeight,const std::string& Tag)
+Bullets::Bullets(int id, float width, float height, const sf::Texture& bulletModel, const Animation& bulletAnim, const sf::IntRect& TexRect, float fireSpeed, int windowHeight,const Type& Bullettype, const Type& ShooterType, Grid& grid)
 	:
 	bulletAnim(bulletAnim),
 	speed(fireSpeed),
 	windowHeight(windowHeight),
-	Tag(Tag)
+	type(Bullettype),
+	ShootersType(ShooterType),
+	grid(grid)
 {
 	bullet.setSize({width,height});
 	bullet.setTexture(&bulletModel);
 	bullet.setTextureRect(TexRect);
 	bullet.setOrigin(bullet.getSize() / 2.f);
+	Info.id = id;
 }
 
 void Bullets::Update(float delta)
 {
-	bulletAnim.Update(delta);
-	bullet.setTextureRect(bulletAnim.GetCurrentFrame());
-	Fire(delta);
 	//disabled when out of screen
-	if(GetPosition().y < 0 || GetPosition().y >= windowHeight)
-		SetActive(false);
+	if(IsActive())
+	{
+		bulletAnim.Update(delta);
+		bullet.setTextureRect(bulletAnim.GetCurrentFrame());
+		Fire(delta);
+		Info.Position = GetPosition();
+		Info.Size = GetSize() / 2.f;
+		Info.EntityType = GetType();
+		grid.AddToGrid(Info);
+		
+		if (GetPosition().y < 0 || GetPosition().y >= windowHeight)
+		{
+			SetActive(false);
+			grid.RemoveFromGrid(Info);
+			return;
+		}
+		if (IsDestroyed())
+		{
+			SetActive(false);
+			grid.RemoveFromGrid(Info);
+			return;
+		}
+		OnHit();
+	}
+		
 }
 
 void Bullets::Draw(sf::RenderWindow& window)
@@ -60,6 +83,8 @@ void Bullets::SetPosition(float x,float y)
 void Bullets::SetActive(bool in_state)
 {
 	ActiveState = in_state;
+	if(ActiveState)
+		SetDestroyedState(false);
 }
 
 bool Bullets::GetDirection() const
@@ -74,10 +99,29 @@ void Bullets::SetDirection(bool in_val)
 
 	Direction = in_val;
 }
-
-std::string Bullets::GetTag() const
+void Bullets::OnHit()
 {
-	return Tag;
+	bool ShouldDestroy = false;
+	if(grid.IsEntityCollides(Info) && !IsDestroyed())
+	{
+		Info.Position = GetPosition();
+		auto Entities = grid.GetCollidedEntites(Info);
+		for(const auto& e : Entities)
+		{
+			//its not a bullet && its not damaging the shooter(player bullet doesn't damage the player)
+			if(e.EntityType != Type::playerBullet && e.EntityType != Type::enemyBullet)
+			{
+				if(ShootersType != e.EntityType)
+				{
+					SetDestroyedState(true);
+				}
+			}
+		}
+	}
+}
+Type Bullets::GetType() const
+{
+	return type;
 }
 
 sf::Vector2f Bullets::GetPosition() const

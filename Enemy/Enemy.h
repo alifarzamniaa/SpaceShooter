@@ -76,6 +76,8 @@ public:
 	virtual bool IsInWallBoundary() const = 0;
 	virtual bool GetShootDir() const = 0;
 	virtual int GetFireCurrentFrame() const = 0;
+	virtual bool IsMoving() const = 0;
+	virtual void SetMoving(bool in_State) = 0;
 	virtual std::vector<sf::Vector2f> GetSockets() const = 0;
 	virtual std::vector<int> GetFrameOfFire() const = 0;
 	virtual std::vector<Bullets*>& GetBullets() = 0;

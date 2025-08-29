@@ -13,17 +13,22 @@ void MoveTo::Start()
 	IsActiveState = true;
 	locToMove = GetLocationFunc();
 	Dir = locToMove - AttachedEntity->GetPosition();
+	NormalizedDir = Dir.length() != 0.0f ? Dir.normalized() : sf::Vector2f(0.0f, 0.0f);
 }
 
 void MoveTo::Update(float delta)
 {
 	if(AttachedEntity && IsActiveState)
 	{
-		auto NormalizedDir = Dir.length() != 0.0f ? Dir.normalized() : sf::Vector2f(0.0f,0.0f);
-		sf::Vector2f vel = NormalizedDir * speed * delta;
 		sf::Vector2f distance = locToMove - AttachedEntity->GetPosition();
-		AttachedEntity->SetPosition(AttachedEntity->GetPosition().x + vel.x, AttachedEntity->GetPosition().y + vel.y);
-		if(distance.length() < 1.f || !AttachedEntity->IsInWallBoundary())
+		
+		if(AttachedEntity->IsInWallBoundary() && std::abs(distance.length()) > 1.f)
+		{
+			//using std::min to make sure we dont overshoot 
+			sf::Vector2f vel = NormalizedDir * std::min(speed * delta,distance.length());
+			AttachedEntity->SetPosition(AttachedEntity->GetPosition().x + vel.x, AttachedEntity->GetPosition().y + vel.y);
+			AttachedEntity->SetMoving(true);
+		}else
 			Cancel();
 	}
 }
@@ -31,6 +36,7 @@ void MoveTo::Update(float delta)
 void MoveTo::Cancel()
 {
 	IsActiveState = false;
+	AttachedEntity->SetMoving(false);
 }
 
 bool MoveTo::IsFinished()

@@ -19,8 +19,8 @@ private:
 	Enemy* AttachedEntity; // this gets the entity that this action is attached to it
 	std::function<sf::Vector2f()> GetLocationFunc;
 	sf::Vector2f locToMove;
+	sf::Vector2f NormalizedDir;
 	sf::Vector2f Dir;
 	float speed;
-	float threshold;
 	bool IsActiveState = false;
 };

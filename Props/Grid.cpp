@@ -8,111 +8,119 @@ Grid::Grid(int wCell, int hCell, sf::RenderWindow& window)
 {
 	GridSizeX = window.getSize().x / cellWidth;
 	GridSizeY = window.getSize().y / cellHeight;
-	GridSystem.resize(GridSizeX);
-	for(auto& g : GridSystem)
-		g.resize(GridSizeY);
+	GridSystem.resize(GridSizeX * GridSizeY);
 
-	//we dont want to resize the array of entities because it will be filled with AddToGrid later
+	//(NOTE)we dont want to resize the array of entities (CellEntityInfo array) because it will be filled with AddToGrid later
 }
 
-void Grid::AddToGrid(Entity* e)
+void Grid::AddToGrid(const CellEntityInfo& eInfo)
 {
-	if(e)
-	{
-		auto EntityLastOccupied = e->GetLastOccupied();
+		EntityBoundry eBoundry = GetBoundary(eInfo);
 		NewOccupied.clear();
-		//Looping through cells that an entity occupies
-		int left = (e->GetPosition().x - (e->GetSize().x / 2)) / GetCellWidth();
-		int right = (e->GetPosition().x + (e->GetSize().x / 2)) / GetCellWidth();
-		int top = (e->GetPosition().y - (e->GetSize().y / 2)) / GetCellHeight();
-		int bottom = (e->GetPosition().y + (e->GetSize().y / 2)) / GetCellHeight();
-		for(int i = left; i <= right;i++)
+		for(int i = eBoundry.left; i <= eBoundry.right;i++)
 		{
-			for(int j = top;j <= bottom;j++)
+			for(int j = eBoundry.top;j <= eBoundry.bottom;j++)
 			{
 				//making sure we do not check outside the screen entities
 				if (i < GetGridSizeX() && j < GetGridSizeY() && i >= 0 && j >= 0)
 				{
 					// if it is not already in the grid
-					if(std::find(GridSystem[i][j].begin(), GridSystem[i][j].end(), e) == GridSystem[i][j].end())
+					if(std::find(GridSystem[IndexAccess(i,j)].begin(), GridSystem[IndexAccess(i,j)].end(), eInfo) == GridSystem[IndexAccess(i,j)].end())
 					{
-						GridSystem[i][j].push_back(e);
-						NewOccupied.insert({ i,j });
+						GridSystem[IndexAccess(i,j)].push_back(eInfo);
 					}
+					NewOccupied.insert({ i,j });
 				}
 			}
 		}
-		if(!NewOccupied.empty())
+		RemoveOldGrid(eInfo);
+}
+
+void Grid::RemoveFromGrid(const CellEntityInfo& eInfo)
+{
+	auto EntityPos = PrevPositions.find(eInfo.id);
+	if (EntityPos != PrevPositions.end())
+	{
+		for (auto& pCell : EntityPos->second)
 		{
-			RemoveGrid(EntityLastOccupied, e);
-			e->SetOccupied(EntityLastOccupied);
+			auto& cell = GridSystem[IndexAccess(pCell.x,pCell.y)];
+			auto eIt = std::find(cell.begin(), cell.end(), eInfo);
+			if (eIt != cell.end())
+			{
+				*eIt = cell.back(); //overwrite the current one by last element(swaping it)
+				cell.pop_back();
+			}
 		}
-		
+		PrevPositions.erase(eInfo.id);
 	}
-}
 
-void Grid::RemoveGrid(std::vector<sf::Vector2i>& oldCells, Entity* e)
+}
+void Grid::RemoveOldGrid(const CellEntityInfo& eInfo)
 {
-	for (auto& cell : oldCells)
+	auto EntityPos = PrevPositions.find(eInfo.id);
+	if(EntityPos != PrevPositions.end())
 	{
-		auto it = NewOccupied.find(cell);
-		//if we don't find the position of the new grid
-		if (it == NewOccupied.end())
+		int i = 0;
+		int j = 0;
+		bool ChangeHappend = false;
+		auto pCell = EntityPos->second;
+		for(const auto& p : pCell)
 		{
-			//finding the entity at the old grid 
-			auto eIt = std::find(GridSystem[cell.x][cell.y].begin(), GridSystem[cell.x][cell.y].end(), e);
-			GridSystem[cell.x][cell.y].erase(eIt);
+			if (NewOccupied.find(p) == NewOccupied.end())
+			{
+					auto& cell = GridSystem[IndexAccess(p.x, p.y)];
+					//finding the entity at the old grid 
+					auto eIt = std::find(cell.begin(), cell.end(), eInfo);
+					if (eIt != cell.end())
+					{
+						*eIt = cell.back(); //overwrite the current one by last element(swaping it)
+						cell.pop_back();
+					}
+					ChangeHappend = true;
+				}
+				i++;
+				j++;
 		}
-	}
-	oldCells.clear();
-	for (auto& cell : NewOccupied)
+		EntityPos->second.clear();
+		for (auto& nCell : NewOccupied)
+		{
+			// updating the old grid to new cell
+			EntityPos->second.push_back(nCell);
+		}
+	}else
 	{
-		// updating the old grid to new cell
-		oldCells.push_back(cell);
+		std::vector<sf::Vector2i> Pos;
+		for (auto& nCell : NewOccupied)
+		{
+			Pos.push_back(nCell);
+		}
+		PrevPositions.insert({eInfo.id,Pos});
 	}
+	
 }
-std::vector<Entity*> Grid::GetFromGrid(int wCell, int hCell) const
+int Grid::IndexAccess(int x, int y) const
 {
-	if (wCell < GetGridSizeX() && hCell < GetGridSizeY() && wCell >= 0 && hCell >= 0)
-		return GridSystem[wCell][hCell];
-}
-
-std::vector<Entity*> Grid::GetFromGrid(const sf::Vector2f& Pos) const
-{
-	int x = Pos.x / GetCellWidth();
-	int y = Pos.y / GetCellHeight();
-	if(x < GetGridSizeX() && y < GetGridSizeY() && x >= 0 && y >= 0)
-		return GridSystem[x][y];
+	return y * GridSizeX + x;
 }
 
-bool Grid::IsEntityCollides(Entity& e)
+bool Grid::IsEntityCollides(CellEntityInfo& eInfo)
 {
-	int left = (e.GetPosition().x - (e.GetSize().x / 2)) / GetCellWidth();
-	int right = (e.GetPosition().x + (e.GetSize().x / 2)) / GetCellWidth();
-	int top = (e.GetPosition().y - (e.GetSize().y / 2)) / GetCellHeight();
-	int bottom = (e.GetPosition().y + (e.GetSize().y / 2)) / GetCellHeight();
+	EntityBoundry eBoundry = GetBoundary(eInfo);
 
-	for (int i = left; i <= right; i++)
+	for (int i = eBoundry.left; i <= eBoundry.right; i++)
 	{
-		for (int j = top; j <= bottom; j++)
+		for (int j = eBoundry.top; j <= eBoundry.bottom; j++)
 		{
 			if (i < GetGridSizeX() && j < GetGridSizeY() && i >= 0 && j >= 0)
 			{
-				if (!GridSystem[i][j].empty())
+				if (!GridSystem[IndexAccess(i,j)].empty())
 				{
-					for (int k = 0; k < GridSystem[i][j].size(); k++)
+					for (int k = 0; k < GridSystem[IndexAccess(i,j)].size(); k++)
 					{
 						//not collding with self and self bullet
-						if (GridSystem[i][j][k] != &e && e.GetTag() != GridSystem[i][j][k]->GetTag())
+						if (GridSystem[IndexAccess(i,j)][k].id != eInfo.id && eInfo.EntityType != GridSystem[IndexAccess(i,j)][k].EntityType)
 						{
-							//add two colliding entities into the collision list if they are not already in it
-							// this indicates that these two entities has already been colliding
-							std::pair<Entity*,Entity*> pair = std::make_pair(&e, GridSystem[i][j][k]);
-							if(CollisionCheck.find(pair) == CollisionCheck.end())
-							{
-								CollisionCheck.insert(pair);
-								return true;
-							}
+							return true;
 						}
 					}
 				}
@@ -120,6 +128,37 @@ bool Grid::IsEntityCollides(Entity& e)
 		}
 	}
 	return false;
+}
+
+std::vector<CellEntityInfo> Grid::GetCollidedEntites(const CellEntityInfo& eInfo)
+{
+	EntityBoundry eBoundry = GetBoundary(eInfo);
+	std::vector<CellEntityInfo> HitRes;
+	for (int i = eBoundry.left; i <= eBoundry.right; i++)
+	{
+		for (int j = eBoundry.top; j <= eBoundry.bottom; j++)
+		{
+			if (i < GetGridSizeX() && j < GetGridSizeY() && i >= 0 && j >= 0)
+			{
+				if (!GridSystem[IndexAccess(i, j)].empty())
+				{
+					for(const auto& e : GridSystem[IndexAccess(i, j)])
+						HitRes.push_back(e);
+				}
+			}
+		}
+	}
+	return HitRes;
+}
+
+EntityBoundry Grid::GetBoundary(const CellEntityInfo& eInfo)
+{
+	EntityBoundry etb  = {};
+	etb.left = (eInfo.Position.x - (eInfo.Size.x / 2.f)) / GetCellWidth();
+	etb.right = (eInfo.Position.x + (eInfo.Size.x / 2.f)) / GetCellWidth();
+	etb.top = (eInfo.Position.y - (eInfo.Size.y / 2.f)) / GetCellHeight();
+	etb.bottom = (eInfo.Position.y + (eInfo.Size.y / 2.f)) / GetCellHeight();
+	return etb;
 }
 
 int Grid::GetCellWidth() const
@@ -140,10 +179,5 @@ int Grid::GetGridSizeX() const
 int Grid::GetGridSizeY() const
 {
 	return GridSizeY;
-}
-
-void Grid::ResetCollisionCheck()
-{
-	CollisionCheck.clear();
 }
 

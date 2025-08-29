@@ -1,5 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+enum Type
+{
+	player,
+	enemy,
+	playerBullet,
+	enemyBullet
+};
 class Entity
 {
 public:
@@ -14,10 +21,10 @@ public:
 
 	virtual bool IsActive() const = 0;
 	virtual void SetActive(bool in_state) = 0;
-
+	virtual void OnHit() = 0;
 	virtual void SetDestroyedState(bool in_State) = 0;
 	virtual bool IsDestroyed() const = 0;
 	virtual std::vector<sf::Vector2i>& GetLastOccupied() = 0;
 	virtual void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) = 0;
-	virtual std::string GetTag() const = 0;
+	virtual Type GetType() const = 0;
 };

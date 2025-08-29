@@ -9,7 +9,7 @@
 class Player : public Entity
 {
 public:
-	Player(const sf::Vector2f& pos);	
+	Player(int id, const sf::Vector2f& pos,Grid& grid);
 	void Draw(sf::RenderWindow& window) override;
 	void Update(float delta) override;
 
@@ -24,7 +24,7 @@ public:
 
 	void SetDestroyedState(bool in_State) override;
 	bool IsDestroyed() const override;
-	void OnHit(Grid& grid);
+	void OnHit() override;
 	void SetFiringState(bool in_State) ;
 	bool IsFiring() const;
 
@@ -44,7 +44,7 @@ public:
 
 	std::vector<sf::Vector2i>& GetLastOccupied() override;
 	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
-	std::string GetTag() const override;
+	Type GetType() const override;
 private:
 	//Custom Properties
 	std::string BaseImgPath = "Images/Player/Weapon.png";
@@ -53,23 +53,25 @@ private:
 	std::string DestructionImgPath = "Images/Player/Destruction.png";
 	std::string BulletImgPath = "Images/Bullets/PlayerBullet.png";
 
-	std::string Tag = "Player";
+	Type type = Type::player;
 	//this is used for if texture is smaller than the box, you can adjust the gap between box and texture to make collision more accurate
-	float verticalPadding = 20.f;
+	float YTextureOffset = 35.f;
 	// same as vertical but for horizontal part
-	float horizontalPadding = 15.f;
+	float XTextureOffset = 30.f;
 
 	int health = 100;
-	float playerShipSize = 100.f;
+	float playerShipSize = 128.f; // for grid system accuracy it needs to be 2 to power of n like 32 64 128
+	float CollisionSize = playerShipSize / 4.f; // used to have accurate collision on the grid
 	float speed = 500.f;
 	float ShieldCooldown = 20.f; // in seconds
 	float ShieldDuration = 5.f; // in seconds
 	//change its value on constructor
-	sf::Vector2f LBulletSocket = sf::Vector2f(-10.f, -15.f); // left Socket
-	sf::Vector2f RBulletSocket = sf::Vector2f(10.f, -15.f); // Right Socket
+	sf::Vector2f LBulletSocket = sf::Vector2f(-15.f, -15.f); // left Socket
+	sf::Vector2f RBulletSocket = sf::Vector2f(15.f, -15.f); // Right Socket
 
 	//==========================================================================
 	//obj
+	Grid& grid;
 	SpaceShip sp;
 	sf::Texture BulletTex;
 	Animation FiringAnim;
@@ -78,9 +80,11 @@ private:
 	Animation BulletAnim;
 	Animation DestructionAnim;
 	std::vector<sf::Vector2i> LastOccupied;
-
+	CellEntityInfo Info;
 	bool ActiveState = true;
 	bool Firing = false;
 	bool Destroyed = false;
+	bool IsMoving = false;
+	int id;
 };
 

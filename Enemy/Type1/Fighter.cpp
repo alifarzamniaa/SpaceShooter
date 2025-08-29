@@ -4,7 +4,7 @@
 #include "../../AI/Actions/FireAction.h"
 #include <math.h>
 
-Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& player, Pool& bulletPool)
+Fighter::Fighter(int id,const sf::Vector2f& pos, sf::RenderWindow& window, Player& player, Pool& bulletPool, Grid& grid)
 	:
 	Enemy(window,player,pos,bulletPool,
 	{
@@ -16,17 +16,19 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	"Images/Bullets/Enemy/Type1/FighterBullet.png",
 	100, // health
 	400 // speed
-	})
+	}),
+	grid(grid),
+	id(id)
 {
 
 	//Socket Positions
-	BulletsSocket.push_back({ -10.f,15.f }); // left socket
-	BulletsSocket.push_back({ 10.f,15.f }); // right socket
+	BulletsSocket.push_back({ -15.f,15.f }); // left socket
+	BulletsSocket.push_back({ 15.f,15.f }); // right socket
 	FrameOfFire.push_back(2);// fires at frame 2
 	FrameOfFire.push_back(4);// same at 4
 
 
-	ListOFActions.emplace_back(std::make_shared<Roam>(this,3.f,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
+	ListOFActions.emplace_back(std::make_shared<Roam>(this,3.f,0,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
@@ -40,14 +42,22 @@ Fighter::Fighter(const sf::Vector2f& pos, sf::RenderWindow& window, Player& play
 	sp.UpdateEngineTexRect(sf::IntRect({ 0, 0 }, { 64,64 }));
 	sp.UpdateShieldTexRect(sf::IntRect({ 0, 0 }, { 64,64 }));
 
-
+	Info.id = id;
+	Info.Position = GetPosition();
+	Info.Size = GetSize() / 4.f;
+	Info.EntityType = GetType();
 	
+
+	grid.AddToGrid(Info);
 }
 
 void Fighter::Draw(sf::RenderWindow& window)
 {
 	if (IsActive())
+	{
 		sp.Draw(window);
+	}
+
 }
 
 void Fighter::Update(float delta)
@@ -55,11 +65,12 @@ void Fighter::Update(float delta)
 	
 	if(IsActive())
 	{
-		AI->Update(delta);
-		AIBehaviour();
 		DestructionEvent(delta);
 		if(!IsDestroyed())
 		{
+			OnHit();
+			AI->Update(delta);
+			AIBehaviour();
 			EngineAnim.Update(delta);
 			sp.UpdateEngineTexRect(EngineAnim.GetCurrentFrame());
 			if (sp.GetShieldState())
@@ -90,6 +101,7 @@ void Fighter::DestructionEvent(float delta)
 	if (IsDestroyed())
 	{
 		sp.SetEngineState(false);
+		grid.RemoveFromGrid(Info);
 		DestructionAnim.Update(delta);
 		sp.UpdateBaseTexRect(DestructionAnim.GetCurrentFrame());
 		if (DestructionAnim.IsAnimFinished())
@@ -147,6 +159,11 @@ void Fighter::AIBehaviour()
 		ShootingDir = true;
 		sp.SetRotation(sf::degrees(180));
 	}
+	if(IsMoving())
+	{
+		Info.Position = GetPosition();
+		grid.AddToGrid(Info);
+	}
 }
 
 
@@ -170,6 +187,24 @@ void Fighter::SetSize(float width, float height)
 	sp.SetSize({ width,height });
 }
 
+void Fighter::OnHit()
+{
+	if (grid.IsEntityCollides(Info))
+	{
+		Info.Position = GetPosition();
+		auto Entities = grid.GetCollidedEntites(Info);
+		for (const auto& e : Entities)
+		{
+			//its not a bullet && its not damaging the shooter(player bullet doesn't damage the player)
+			if (e.EntityType == Type::playerBullet)
+			{
+				SetHealth(GetHealth() - 10);
+				std::cout << "Get HITTT : " << GetHealth() <<"\n";
+			}
+		}
+	}
+}
+
 bool Fighter::IsActive() const
 {
 	return ActiveState;
@@ -178,6 +213,16 @@ bool Fighter::IsActive() const
 void Fighter::SetActive(bool in_state)
 {
 	ActiveState = in_state;
+}
+
+void Fighter::SetMoving(bool in_State)
+{
+	Moving = in_State;
+}
+
+bool Fighter::IsMoving() const
+{
+	return Moving;
 }
 
 float Fighter::GetTextureOffsetX() const
@@ -220,7 +265,7 @@ bool Fighter::IsInWallBoundary() const
 	float winWidth = (float)windowRef.getSize().x;
 	float winHeight = (float)windowRef.getSize().y;
 
-	return left >= 0 && right <= winWidth && top >= 0 && bottom <= winHeight;
+	return left > 0 && right < winWidth && top > 0 && bottom < winHeight;
 }
 
 int Fighter::GetFireCurrentFrame() const
@@ -252,9 +297,9 @@ Animation Fighter::GetBulletAnim() const
 	return BulletAnim;
 }
 
-std::string Fighter::GetTag() const
+Type Fighter::GetType() const
 {
-	return Tag;
+	return type;
 }
 
 bool Fighter::GetShootDir() const

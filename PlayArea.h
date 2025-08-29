@@ -14,13 +14,15 @@ public:
 	void Update(float delta);
 	void InputHandler(float delta,std::optional<sf::Event> e);
 private:
+	int id = 0;
 	sf::RenderWindow& window;
+	Grid grid;
 	Player player;
 	Background bg;
 	Pool playerBulletPool;
 	Pool fighterBulletPool;
 	Fighter f1;
-	Grid grid;
+
 	float Timer = 0.0f;
 };
 

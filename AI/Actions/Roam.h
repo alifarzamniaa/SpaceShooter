@@ -10,7 +10,7 @@ public:
 	// - Task Duration : set how much time(in seconds) needs to roam
 	// - range : the range of movement in x direction (-range to range from the initPosX position)
 	// - LeftRightBound : Horizontal boundaries: left (x-value), right (y-value)
-	Roam(Enemy* e, float TaskDuration, float range, float speed,const sf::Vector2f& LeftRightBound);
+	Roam(Enemy* e, float TaskDuration, float MinRangeX,float MaxRangeX, float speed,const sf::Vector2f& LeftRightBound);
 	//initialize values when a task is started ( it can be empty but the child class needs to have it )
 	void Start() override;
 	// the task which is going to be excuted every frame
@@ -23,7 +23,8 @@ private:
 	Enemy* AttachedEntity; // this gets the entity that this action is attached to it
 	float Duration;
 	float Elapsed;
-	float RangeX;
+	float MaxRangeX;
+	float MinRangeX;
 	float speed;
 	float Dir;
 	float InitPosX;

@@ -6,7 +6,7 @@
 class Fighter : public Enemy
 {
 public:
-	Fighter(const sf::Vector2f& pos,sf::RenderWindow& window, Player& player,Pool& bulletPool);
+	Fighter(int id,const sf::Vector2f& pos,sf::RenderWindow& window, Player& player,Pool& bulletPool,Grid& grid);
 	void Draw(sf::RenderWindow& window) override;
 	void Update(float delta) override;
 
@@ -23,10 +23,11 @@ public:
 
 	void SetPosition(float x, float y) override;
 	void SetSize(float width, float height) override;
-
+	void OnHit() override; 
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
-
+	void SetMoving(bool in_State) override;
+	bool IsMoving() const override;
 	std::vector<sf::Vector2i>& GetLastOccupied() override;
 	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	// Returns the horizontal offset needed for accurate collision detection,
@@ -52,7 +53,7 @@ public:
 	std::vector<Bullets*>& GetBullets() override;
 	sf::Texture& GetBulletTex() override;
 	Animation GetBulletAnim() const override;
-	std::string GetTag() const override;
+	Type GetType() const override;
 
 	bool GetShootDir() const override;
 private:
@@ -62,7 +63,7 @@ private:
 	// texture may not be the same size as rect itself and may cause to inaccurate collision
 	// this value is for vertical offset used to adjust collision detection
 	// change this to get more accurate collision or make it 0 for texture that is the same size as rectangle
-	float XTextureOffset = 30.f;
+	float XTextureOffset = 40.f;
 	// texture may not be the same size as rect itself and may cause to inaccurate collision
 	// this value is for vertical offset used to adjust collision detection
 	// change this to get more accurate collision or make it 0 for texture that is the same size as rectangle
@@ -75,10 +76,14 @@ private:
 	std::vector<Bullets*> BulletList;
 	std::vector<int> FrameOfFire; //each index is the index of frame that missle or bullet will be fired (has to be in order that fire happens)
 	std::vector<sf::Vector2i> LastOccupied;
-	std::string Tag = "Enemy";
+	Type type = Type::enemy;
+	int id;
 	bool Firing = false;
 	bool ActiveState = true;
 	bool Destroyed = false;
 	bool ShootingDir = false; // false means upward
+	bool Moving = false;
+	CellEntityInfo Info;
+	Grid& grid;
 };
 

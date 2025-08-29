@@ -5,21 +5,21 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	window(window),
 	playerBulletPool(PlayerBulletSize),
 	fighterBulletPool(100),
-	player({600.f,600.f}),
+	grid(32,32,window),
 	bg(window,200.f),
-	f1({200.f,200.f},window,player,fighterBulletPool),
-	grid(64,64,window)
+	player(id++,{600.f,600.f},grid),
+	f1(id++,{200.f,200.f},window,player,fighterBulletPool,grid)
 {
 	for(int i = 0; i < playerBulletPool.GetSize();i++)
 	{
 		playerBulletPool.AddEntity(
-			std::make_unique<Bullets>(15,15,player.GetBulletTex(),player.GetBulletAnim(), sf::IntRect({ 0,0 }, { 9,12 }),800.f,window.getSize().y,"Player")
+			std::make_unique<Bullets>(id++,16,16,player.GetBulletTex(),player.GetBulletAnim(), sf::IntRect({ 0,0 }, { 9,12 }),800.f,window.getSize().y,Type::playerBullet,Type::player, grid)
 		);
 	}
 	for(int i = 0; i < fighterBulletPool.GetSize();i++)
 	{
 		fighterBulletPool.AddEntity(
-			std::make_unique<Bullets>(15,15,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y,"Enemy")
+			std::make_unique<Bullets>(id++,16,16,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y, Type::enemyBullet, Type::enemy, grid)
 		);
 	}
 
@@ -44,26 +44,16 @@ void PlayArea::Draw()
 
 void PlayArea::Update(float delta)
 {
-	Timer += delta;
-	if(Timer >= 1.f)
-	{
-		grid.ResetCollisionCheck();
-		Timer = 0.0f;
-	}
-	player.Movement(delta, { 0,(float)window.getSize().x }, { 0,(float)window.getSize().y });
-	player.Update(delta);
-	player.OnHit(grid);
-	grid.AddToGrid(&player);
 	bg.Update(delta,window);
+	player.Update(delta);
+	player.Movement(delta, { 0,(float)window.getSize().x }, { 0,(float)window.getSize().y });
 	f1.Update(delta);
-	grid.AddToGrid(&f1);
 	// updating the active bullets
 	for(auto& e : playerBulletPool.GetActiveItem())
 	{
 		if(e)
 		{
 			e->Update(delta);
-			grid.AddToGrid(e);
 		}
 	}
 	for (auto& e : fighterBulletPool.GetActiveItem())
@@ -71,7 +61,6 @@ void PlayArea::Update(float delta)
 		if (e)
 		{
 			e->Update(delta);
-			grid.AddToGrid(e);
 		}
 	}
 }

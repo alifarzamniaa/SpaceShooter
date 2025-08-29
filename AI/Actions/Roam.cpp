@@ -1,10 +1,11 @@
 #include "Roam.h"
 #include <math.h>
 #include <iostream>
-Roam::Roam(Enemy* e, float TaskDuration, float range, float speed, const sf::Vector2f& LeftRightBound)
+Roam::Roam(Enemy* e, float TaskDuration, float MinRangeX, float MaxRangeX, float speed, const sf::Vector2f& LeftRightBound)
     :
     Duration(TaskDuration),
-    RangeX(range),
+    MinRangeX(MinRangeX),
+    MaxRangeX(MaxRangeX),
     speed(speed),
     AttachedEntity(e)
 {
@@ -37,13 +38,11 @@ void Roam::Update(float delta)
 
                 float EnemyLeft = CurrentPos - AttachedEntity->GetSize().x / 2 + AttachedEntity->GetTextureOffsetX();
                 float EnemyRight = CurrentPos + AttachedEntity->GetSize().x / 2 - AttachedEntity->GetTextureOffsetX();
-
-                if (CurrentPos >= InitPosX + RangeX || CurrentPos <= InitPosX - RangeX || 
-                    EnemyLeft <= leftBound || EnemyRight >= rightBound
-                )
+                if (!AttachedEntity->IsInWallBoundary() && (EnemyLeft <= MinRangeX || EnemyRight >= MaxRangeX ))
                     Dir *= -1;
                 float vel = Dir * speed * delta;
                 AttachedEntity->SetPosition(CurrentPos + vel, AttachedEntity->GetPosition().y);
+                AttachedEntity->SetMoving(true);
             }
             else
                std::cout << "Entity is Not Attached(it is NULL) !!\n";
@@ -54,6 +53,8 @@ void Roam::Update(float delta)
 void Roam::Cancel()
 {
     ActiveState = false;
+    if(AttachedEntity)
+        AttachedEntity->SetMoving(false);
 }
 
 bool Roam::IsFinished()

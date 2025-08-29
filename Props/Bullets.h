@@ -2,11 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include "../Animation.h"
 #include "../Entity.h"
+#include "Grid.h"
 class Bullets : public Entity
 {
 public:
 	// direction : false make it move upwards , true make it downwards;
-	Bullets(float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, int windowHeight,const std::string& tag);
+	Bullets(int id,float width, float height, const sf::Texture& bulletModel,const Animation& bulletAnim,const sf::IntRect& TexRect,float fireSpeed, int windowHeight,const Type& Bullettype,const Type& ShooterType,Grid& grid);
 	
 	void Update(float delta) override; 
 	void Draw(sf::RenderWindow& window) override;
@@ -20,13 +21,14 @@ public:
 	void SetDestroyedState(bool in_State) override;
 	bool IsDestroyed() const override;
 
+	void OnHit() override;
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
 	std::vector<sf::Vector2i>& GetLastOccupied() override;
 	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	bool GetDirection() const;
 	void SetDirection(bool in_val);
-	std::string GetTag() const override;
+	Type GetType() const override;
 
 private:
 	sf::RectangleShape bullet;
@@ -38,6 +40,9 @@ private:
 	bool Direction = false;
 	bool Destroyed = false;
 	int windowHeight;
-	std::string Tag;
+	Type type;
+	Type ShootersType;
+	CellEntityInfo Info;
+	Grid& grid;
 };
 
