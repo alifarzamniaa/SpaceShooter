@@ -3,6 +3,7 @@
 #include "../Animation.h"
 #include "../Entity.h"
 #include "Grid.h"
+#include "Particle.h"
 class Bullets : public Entity
 {
 public:
@@ -29,7 +30,7 @@ public:
 	bool GetDirection() const;
 	void SetDirection(bool in_val);
 	Type GetType() const override;
-
+	void DestructionEvent(float delta);
 private:
 	sf::RectangleShape bullet;
 	Animation bulletAnim;
@@ -44,5 +45,6 @@ private:
 	Type ShootersType;
 	CellEntityInfo Info;
 	Grid& grid;
+	Particle onHitParticle;
 };
 

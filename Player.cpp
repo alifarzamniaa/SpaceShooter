@@ -10,8 +10,11 @@ Player::Player(int id,const sf::Vector2f& pos, Grid& grid)
 	FiringAnim(64,64,9,0.03f),
 	DestructionAnim(64,64,8,0.15f),
 	grid(grid),
+	fireSoundBuffer("SoundEffects/PlayerWeapon.wav"),
+	fireSound(fireSoundBuffer),
 	id(id)
 {
+	fireSound.setVolume(50.f);
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
 		std::cout << "FAILED TO LOAD BULLET TEXTURE!!!\n";
@@ -258,6 +261,7 @@ void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
 		SetFiringState(true);
 		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 		{
+			fireSound.play();
 			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
 			if (firstBullet)
 			{

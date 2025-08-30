@@ -6,6 +6,7 @@
 #include "Props/Bullets.h"
 #include "Props/Pool.h"
 #include "Props/Grid.h"
+#include "SFML/Audio.hpp"
 class Player : public Entity
 {
 public:
@@ -86,5 +87,7 @@ private:
 	bool Destroyed = false;
 	bool IsMoving = false;
 	int id;
+	sf::SoundBuffer fireSoundBuffer;
+	sf::Sound fireSound;
 };
 

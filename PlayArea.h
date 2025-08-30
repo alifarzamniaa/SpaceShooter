@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Props/Pool.h"
 #include "Props/Bullets.h"
@@ -22,7 +23,7 @@ private:
 	Pool playerBulletPool;
 	Pool fighterBulletPool;
 	Fighter f1;
-
+	sf::Music GameMusic;
 	float Timer = 0.0f;
 };
 

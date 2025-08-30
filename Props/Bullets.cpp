@@ -8,7 +8,17 @@ Bullets::Bullets(int id, float width, float height, const sf::Texture& bulletMod
 	windowHeight(windowHeight),
 	type(Bullettype),
 	ShootersType(ShooterType),
-	grid(grid)
+	grid(grid),
+	onHitParticle("Images/Particle/BulletHit.png",
+				  "SoundEffects/Explosion1.wav",
+				  {
+					32,
+					32,
+					16,
+					16,
+					6,
+					0.01f
+				  })
 {
 	bullet.setSize({width,height});
 	bullet.setTexture(&bulletModel);
@@ -22,37 +32,51 @@ void Bullets::Update(float delta)
 	//disabled when out of screen
 	if(IsActive())
 	{
-		bulletAnim.Update(delta);
-		bullet.setTextureRect(bulletAnim.GetCurrentFrame());
-		Fire(delta);
-		Info.Position = GetPosition();
-		Info.Size = GetSize() / 2.f;
-		Info.EntityType = GetType();
-		grid.AddToGrid(Info);
-		
-		if (GetPosition().y < 0 || GetPosition().y >= windowHeight)
+		if (!IsDestroyed())
 		{
-			SetActive(false);
-			grid.RemoveFromGrid(Info);
-			return;
-		}
-		if (IsDestroyed())
+			if (GetPosition().y < 0 || GetPosition().y >= windowHeight)
+			{
+				SetActive(false);
+				grid.RemoveFromGrid(Info);
+			}else
+			{
+				bulletAnim.Update(delta);
+				bullet.setTextureRect(bulletAnim.GetCurrentFrame());
+				Fire(delta);
+				Info.Position = GetPosition();
+				Info.Size = GetSize() / 2.f;
+				Info.EntityType = GetType();
+				grid.AddToGrid(Info);
+
+				OnHit();
+			}
+		}else
 		{
-			SetActive(false);
 			grid.RemoveFromGrid(Info);
-			return;
+			DestructionEvent(delta);
 		}
-		OnHit();
 	}
+	
 		
 }
-
+void Bullets::DestructionEvent(float delta)
+{
+	if(!onHitParticle.IsFinished())
+	{
+		Info.Position = GetPosition();
+		onHitParticle.Play(Info.Position, delta);
+	}else
+	{
+		SetActive(false);
+	}
+}
 void Bullets::Draw(sf::RenderWindow& window)
 {
-	if(ActiveState)
+	if(!IsDestroyed())
 	{
 		window.draw(bullet);
 	}
+	onHitParticle.Draw(window);
 }
 void Bullets::Fire(float delta)
 {
@@ -113,6 +137,7 @@ void Bullets::OnHit()
 			{
 				if(ShootersType != e.EntityType)
 				{
+					onHitParticle.ActivateParticle();
 					SetDestroyedState(true);
 				}
 			}

@@ -156,6 +156,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Props\Grid.cpp" />
+    <ClCompile Include="Props\Particle.cpp" />
     <ClCompile Include="Props\SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,8 +174,12 @@
     <ClInclude Include="Props\Bullets.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Props\Grid.h" />
+    <ClInclude Include="Props\Particle.h" />
     <ClInclude Include="Props\Pool.h" />
     <ClInclude Include="Props\SpaceShip.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\Particle\BulletHit.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

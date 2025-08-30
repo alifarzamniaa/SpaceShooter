@@ -10,6 +10,10 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	player(id++,{600.f,600.f},grid),
 	f1(id++,{200.f,200.f},window,player,fighterBulletPool,grid)
 {
+	if(!GameMusic.openFromFile("SoundEffects/GameMusic.wav"))
+	{
+		std::cout << "Cant Load Game Music!!\n";
+	}
 	for(int i = 0; i < playerBulletPool.GetSize();i++)
 	{
 		playerBulletPool.AddEntity(
@@ -22,7 +26,10 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 			std::make_unique<Bullets>(id++,16,16,f1.GetBulletTex(),f1.GetBulletAnim(), sf::IntRect({ 0,0 }, { 8,16 }),800.f,window.getSize().y, Type::enemyBullet, Type::enemy, grid)
 		);
 	}
-
+	GameMusic.setLooping(true);
+	GameMusic.setPlayingOffset(sf::seconds(0.5f));
+	GameMusic.setLoopPoints({sf::seconds(0.5f),sf::seconds(367.2f)});
+	GameMusic.play();
 }
 
 void PlayArea::Draw()
@@ -44,6 +51,7 @@ void PlayArea::Draw()
 
 void PlayArea::Update(float delta)
 {
+	
 	bg.Update(delta,window);
 	player.Update(delta);
 	player.Movement(delta, { 0,(float)window.getSize().x }, { 0,(float)window.getSize().y });

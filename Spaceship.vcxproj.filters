@@ -54,6 +54,9 @@
     <ClCompile Include="Props\Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Props\Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -104,5 +107,13 @@
     <ClInclude Include="Props\Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Props\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\Particle\BulletHit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
