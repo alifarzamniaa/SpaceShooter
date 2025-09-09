@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -158,6 +158,8 @@
     <ClCompile Include="Props\Grid.cpp" />
     <ClCompile Include="Props\Particle.cpp" />
     <ClCompile Include="Props\SpaceShip.cpp" />
+    <ClCompile Include="UI\PlayerHealth.cpp" />
+    <ClCompile Include="UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\Actions\FireAction.h" />
@@ -177,6 +179,8 @@
     <ClInclude Include="Props\Particle.h" />
     <ClInclude Include="Props\Pool.h" />
     <ClInclude Include="Props\SpaceShip.h" />
+    <ClInclude Include="UI\PlayerHealth.h" />
+    <ClInclude Include="UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Images\Particle\BulletHit.png" />

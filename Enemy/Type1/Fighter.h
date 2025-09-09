@@ -3,6 +3,7 @@
 #include "../../AI/EnemyAI.h"
 #include "../../Props/SpaceShip.h"
 #include "../../Animation.h"
+
 class Fighter : public Enemy
 {
 public:
@@ -28,8 +29,6 @@ public:
 	void SetActive(bool in_state) override;
 	void SetMoving(bool in_State) override;
 	bool IsMoving() const override;
-	std::vector<sf::Vector2i>& GetLastOccupied() override;
-	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	// Returns the horizontal offset needed for accurate collision detection,
 	// in case the texture size doesn't match the visual rectangle size.
 	// returns 0 if texture is the same size as the rectangle

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(int id,const sf::Vector2f& pos, Grid& grid)
+Player::Player(int id,const sf::Vector2f& pos, Grid& grid,UIManager& UI)
 	:
 	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath,DestructionImgPath),
 	EngineAnim(64,64,8,0.1f),
@@ -10,11 +10,10 @@ Player::Player(int id,const sf::Vector2f& pos, Grid& grid)
 	FiringAnim(64,64,9,0.03f),
 	DestructionAnim(64,64,8,0.15f),
 	grid(grid),
-	fireSoundBuffer("SoundEffects/PlayerWeapon.wav"),
-	fireSound(fireSoundBuffer),
-	id(id)
+	id(id),
+	ui(UI)
 {
-	fireSound.setVolume(50.f);
+	health = 100.f;
 	if(!BulletTex.loadFromFile(BulletImgPath))
 	{
 		std::cout << "FAILED TO LOAD BULLET TEXTURE!!!\n";
@@ -121,7 +120,7 @@ void Player::OnHit()
 			if (e.EntityType == Type::enemyBullet)
 			{
 				SetHealth(GetHealth() - 10);
-				std::cout << "health : " << health << '\n';
+				ui.PlayerHealthChange(GetHealth());
 			}
 		}
 	}
@@ -261,7 +260,6 @@ void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
 		SetFiringState(true);
 		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 		{
-			fireSound.play();
 			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
 			if (firstBullet)
 			{
@@ -291,15 +289,6 @@ Animation Player::GetBulletAnim()
 	return BulletAnim;
 }
 
-std::vector<sf::Vector2i>& Player::GetLastOccupied()
-{
-	return LastOccupied;
-}
-
-void Player::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
-{
-	LastOccupied = occupiedSpace;
-}
 
 Type Player::GetType() const
 {

@@ -6,9 +6,10 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 	playerBulletPool(PlayerBulletSize),
 	fighterBulletPool(100),
 	grid(32,32,window),
-	bg(window,200.f),
-	player(id++,{600.f,600.f},grid),
-	f1(id++,{200.f,200.f},window,player,fighterBulletPool,grid)
+	bg(window,100.f),
+	player(id++,{600.f,600.f},grid,UI),
+	f1(id++,{200.f,200.f},window,player,fighterBulletPool,grid),
+	UI(window,player.GetHealth())
 {
 	if(!GameMusic.openFromFile("SoundEffects/GameMusic.wav"))
 	{
@@ -27,6 +28,7 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 		);
 	}
 	GameMusic.setLooping(true);
+	GameMusic.setVolume(40.f);
 	GameMusic.setPlayingOffset(sf::seconds(0.5f));
 	GameMusic.setLoopPoints({sf::seconds(0.5f),sf::seconds(367.2f)});
 	GameMusic.play();
@@ -35,6 +37,7 @@ PlayArea::PlayArea(int PlayerBulletSize, sf::RenderWindow& window)
 void PlayArea::Draw()
 {
 	bg.Draw(window);
+	UI.Draw();
 	player.Draw(window);
 	for (auto& e : playerBulletPool.GetActiveItem())
 	{
@@ -48,7 +51,6 @@ void PlayArea::Draw()
 	}
 	f1.Draw(window);
 }
-
 void PlayArea::Update(float delta)
 {
 	

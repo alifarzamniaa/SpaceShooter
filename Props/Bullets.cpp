@@ -9,6 +9,8 @@ Bullets::Bullets(int id, float width, float height, const sf::Texture& bulletMod
 	type(Bullettype),
 	ShootersType(ShooterType),
 	grid(grid),
+	FireSoundBuffer("SoundEffects/PlayerWeapon.wav"),
+	FireSound(FireSoundBuffer),
 	onHitParticle("Images/Particle/BulletHit.png",
 				  "SoundEffects/Explosion1.wav",
 				  {
@@ -108,7 +110,10 @@ void Bullets::SetActive(bool in_state)
 {
 	ActiveState = in_state;
 	if(ActiveState)
+	{
 		SetDestroyedState(false);
+		FireSound.play();
+	}
 }
 
 bool Bullets::GetDirection() const
@@ -162,13 +167,4 @@ sf::Vector2f Bullets::GetSize() const
 bool Bullets::IsActive() const
 {
 	return ActiveState;
-}
-std::vector<sf::Vector2i>& Bullets::GetLastOccupied()
-{
-	return LastOccupied;
-}
-
-void Bullets::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
-{
-	LastOccupied = occupiedSpace;
 }

@@ -59,7 +59,6 @@ void Fighter::Draw(sf::RenderWindow& window)
 	}
 
 }
-
 void Fighter::Update(float delta)
 {
 	
@@ -110,30 +109,7 @@ void Fighter::DestructionEvent(float delta)
 		}
 	}
 }
-void Fighter::SetShieldState(bool in_State)
-{
-	sp.SetShieldState(in_State);
-}
 
-void Fighter::SetDestroyedState(bool in_State)
-{
-	Destroyed = in_State;
-}
-
-bool Fighter::IsDestroyed() const
-{
-	return Destroyed;
-}
-
-void Fighter::SetFiringState(bool in_State)
-{
-	Firing = in_State;
-}
-
-bool Fighter::IsFiring() const
-{
-	return Firing;
-}
 
 void Fighter::RetrieveBullet()
 {
@@ -165,28 +141,6 @@ void Fighter::AIBehaviour()
 		grid.AddToGrid(Info);
 	}
 }
-
-
-sf::Vector2f Fighter::GetPosition() const
-{
-	return sp.GetPosition();
-}
-
-sf::Vector2f Fighter::GetSize() const
-{
-	return sp.GetSize();
-}
-
-void Fighter::SetPosition(float x, float y)
-{
-	sp.SetPosition({ x,y });
-}
-
-void Fighter::SetSize(float width, float height)
-{
-	sp.SetSize({ width,height });
-}
-
 void Fighter::OnHit()
 {
 	if (grid.IsEntityCollides(Info))
@@ -204,7 +158,42 @@ void Fighter::OnHit()
 		}
 	}
 }
+bool Fighter::IsInWallBoundary() const
+{
+	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
+	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
+	float top = GetPosition().y - GetSize().y / 2.f + GetTextureOffsetY();
+	float bottom = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
 
+	float winWidth = (float)windowRef.getSize().x;
+	float winHeight = (float)windowRef.getSize().y;
+
+	return left > 0 && right < winWidth && top > 0 && bottom < winHeight;
+}
+void Fighter::SetShieldState(bool in_State)
+{
+	sp.SetShieldState(in_State);
+}
+
+void Fighter::SetDestroyedState(bool in_State)
+{
+	Destroyed = in_State;
+}
+
+bool Fighter::IsDestroyed() const
+{
+	return Destroyed;
+}
+
+void Fighter::SetFiringState(bool in_State)
+{
+	Firing = in_State;
+}
+
+bool Fighter::IsFiring() const
+{
+	return Firing;
+}
 bool Fighter::IsActive() const
 {
 	return ActiveState;
@@ -254,19 +243,26 @@ void Fighter::SetHealth(int in_val)
 {
 	health = in_val;
 }
-
-bool Fighter::IsInWallBoundary() const
+sf::Vector2f Fighter::GetPosition() const
 {
-	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
-	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
-	float top = GetPosition().y - GetSize().y / 2.f + GetTextureOffsetY();
-	float bottom = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
-
-	float winWidth = (float)windowRef.getSize().x;
-	float winHeight = (float)windowRef.getSize().y;
-
-	return left > 0 && right < winWidth && top > 0 && bottom < winHeight;
+	return sp.GetPosition();
 }
+
+sf::Vector2f Fighter::GetSize() const
+{
+	return sp.GetSize();
+}
+
+void Fighter::SetPosition(float x, float y)
+{
+	sp.SetPosition({ x,y });
+}
+
+void Fighter::SetSize(float width, float height)
+{
+	sp.SetSize({ width,height });
+}
+
 
 int Fighter::GetFireCurrentFrame() const
 {
@@ -305,13 +301,4 @@ Type Fighter::GetType() const
 bool Fighter::GetShootDir() const
 {
 	return ShootingDir;
-}
-std::vector<sf::Vector2i>& Fighter::GetLastOccupied()
-{
-	return LastOccupied;
-}
-
-void Fighter::SetOccupied(std::vector<sf::Vector2i>& occupiedSpace)
-{
-	LastOccupied = occupiedSpace;
 }

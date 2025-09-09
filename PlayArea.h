@@ -7,6 +7,8 @@
 #include "background.h"
 #include "Enemy/Type1/Fighter.h"
 #include "Props/Grid.h"
+#include "UI/UIManager.h"
+
 class PlayArea
 {
 public:
@@ -23,6 +25,7 @@ private:
 	Pool playerBulletPool;
 	Pool fighterBulletPool;
 	Fighter f1;
+	UIManager UI;
 	sf::Music GameMusic;
 	float Timer = 0.0f;
 };

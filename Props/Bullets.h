@@ -3,6 +3,7 @@
 #include "../Animation.h"
 #include "../Entity.h"
 #include "Grid.h"
+#include "SFML/Audio.hpp"
 #include "Particle.h"
 class Bullets : public Entity
 {
@@ -25,8 +26,6 @@ public:
 	void OnHit() override;
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
-	std::vector<sf::Vector2i>& GetLastOccupied() override;
-	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	bool GetDirection() const;
 	void SetDirection(bool in_val);
 	Type GetType() const override;
@@ -45,6 +44,8 @@ private:
 	Type ShootersType;
 	CellEntityInfo Info;
 	Grid& grid;
+	sf::SoundBuffer FireSoundBuffer;
+	sf::Sound FireSound;
 	Particle onHitParticle;
 };
 

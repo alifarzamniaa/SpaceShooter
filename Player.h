@@ -6,11 +6,11 @@
 #include "Props/Bullets.h"
 #include "Props/Pool.h"
 #include "Props/Grid.h"
-#include "SFML/Audio.hpp"
+#include "UI/UIManager.h"
 class Player : public Entity
 {
 public:
-	Player(int id, const sf::Vector2f& pos,Grid& grid);
+	Player(int id, const sf::Vector2f& pos,Grid& grid,UIManager& UI);
 	void Draw(sf::RenderWindow& window) override;
 	void Update(float delta) override;
 
@@ -43,8 +43,6 @@ public:
 	sf::Texture& GetBulletTex();
 	Animation GetBulletAnim();
 
-	std::vector<sf::Vector2i>& GetLastOccupied() override;
-	void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) override;
 	Type GetType() const override;
 private:
 	//Custom Properties
@@ -60,7 +58,7 @@ private:
 	// same as vertical but for horizontal part
 	float XTextureOffset = 30.f;
 
-	int health = 100;
+	int health;
 	float playerShipSize = 128.f; // for grid system accuracy it needs to be 2 to power of n like 32 64 128
 	float CollisionSize = playerShipSize / 4.f; // used to have accurate collision on the grid
 	float speed = 500.f;
@@ -73,6 +71,7 @@ private:
 	//==========================================================================
 	//obj
 	Grid& grid;
+	UIManager& ui;
 	SpaceShip sp;
 	sf::Texture BulletTex;
 	Animation FiringAnim;
@@ -87,7 +86,5 @@ private:
 	bool Destroyed = false;
 	bool IsMoving = false;
 	int id;
-	sf::SoundBuffer fireSoundBuffer;
-	sf::Sound fireSound;
 };
 

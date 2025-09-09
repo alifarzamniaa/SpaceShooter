@@ -24,7 +24,5 @@ public:
 	virtual void OnHit() = 0;
 	virtual void SetDestroyedState(bool in_State) = 0;
 	virtual bool IsDestroyed() const = 0;
-	virtual std::vector<sf::Vector2i>& GetLastOccupied() = 0;
-	virtual void SetOccupied(std::vector<sf::Vector2i>& occupiedSpace) = 0;
 	virtual Type GetType() const = 0;
 };
