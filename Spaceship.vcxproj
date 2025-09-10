@@ -150,14 +150,17 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="AI\EnemyAI.cpp" />
+    <ClCompile Include="Enemy\Type1\EliteFighter.cpp" />
     <ClCompile Include="Enemy\Type1\Fighter.cpp" />
     <ClCompile Include="PlayArea.cpp" />
-    <ClCompile Include="Props\Bullets.cpp" />
+    <ClCompile Include="Props\Projectile\BulletResource.cpp" />
+    <ClCompile Include="Props\Projectile\Bullets.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Props\Grid.cpp" />
     <ClCompile Include="Props\Particle.cpp" />
     <ClCompile Include="Props\SpaceShip.cpp" />
+    <ClCompile Include="Props\SpawnManager.cpp" />
     <ClCompile Include="UI\PlayerHealth.cpp" />
     <ClCompile Include="UI\UIManager.cpp" />
   </ItemGroup>
@@ -170,15 +173,18 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="AI\EnemyAI.h" />
     <ClInclude Include="Enemy\Enemy.h" />
+    <ClInclude Include="Enemy\Type1\EliteFighter.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Enemy\Type1\Fighter.h" />
     <ClInclude Include="PlayArea.h" />
-    <ClInclude Include="Props\Bullets.h" />
+    <ClInclude Include="Props\Projectile\BulletResource.h" />
+    <ClInclude Include="Props\Projectile\Bullets.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Props\Grid.h" />
     <ClInclude Include="Props\Particle.h" />
     <ClInclude Include="Props\Pool.h" />
     <ClInclude Include="Props\SpaceShip.h" />
+    <ClInclude Include="Props\SpawnManager.h" />
     <ClInclude Include="UI\PlayerHealth.h" />
     <ClInclude Include="UI\UIManager.h" />
   </ItemGroup>

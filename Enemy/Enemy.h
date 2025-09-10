@@ -4,9 +4,13 @@
 #include "../Props/Pool.h"
 #include "../Player.h"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
-
+struct RandomInfo
+{
+	sf::Vector2f initPos;
+	sf::Vector2f destinationPos;
+	float RoamDuration;
+};
 struct AnimData
 {
 	int FrameWidth;
@@ -21,9 +25,6 @@ struct EnemyData
 	AnimData EngineAnim;
 	AnimData ShieldAnim;
 	AnimData DestructAnim;
-	AnimData BulletAnim;
-
-	std::string BulletTexPath;
 	int health;
 	float speed;
 };
@@ -43,16 +44,10 @@ public:
 		EngineAnim(data.EngineAnim.FrameWidth,data.EngineAnim.FrameHeight,data.EngineAnim.NumberOfFrames,data.EngineAnim.AnimDuration),
 		ShieldAnim(data.ShieldAnim.FrameWidth,data.ShieldAnim.FrameHeight,data.ShieldAnim.NumberOfFrames,data.ShieldAnim.AnimDuration),
 		DestructionAnim(data.DestructAnim.FrameWidth, data.DestructAnim.FrameHeight ,data.DestructAnim.NumberOfFrames,data.DestructAnim.AnimDuration),
-		BulletAnim(data.BulletAnim.FrameWidth, data.BulletAnim.FrameHeight, data.BulletAnim.NumberOfFrames, data.BulletAnim.AnimDuration),
 		health(data.health),
 		speed(data.speed),
-		BulletImgPath(data.BulletTexPath),
 		sp(pos,data.FireAnim.Path,data.EngineAnim.Path,data.ShieldAnim.Path,data.DestructAnim.Path)
 	{
-		if (!BulletTex.loadFromFile(BulletImgPath))
-		{
-			std::cout << "FAILED TO LOAD BULLET TEXTURE!!!\n";
-		}
 	};
 	virtual void SetShieldState(bool in_State) = 0;
 	// Returns the horizontal offset needed for accurate collision detection,
@@ -82,8 +77,6 @@ public:
 	virtual std::vector<int> GetFrameOfFire() const = 0;
 	virtual std::vector<Bullets*>& GetBullets() = 0;
 
-	virtual sf::Texture& GetBulletTex() = 0;
-	virtual Animation GetBulletAnim() const = 0;
 	virtual ~Enemy() = default;
 protected:
 	// logic for destruction and when health is <= 0 
@@ -93,19 +86,16 @@ protected:
 	std::string EngineImgPath;
 	std::string ShieldImgPath;
 	std::string DestructionImgPath;
-	std::string BulletImgPath;
 
 	Animation FiringAnim;
 	Animation EngineAnim;
 	Animation ShieldAnim;
 	Animation DestructionAnim;
-	Animation BulletAnim;
 
 	int health;
 	float speed;
 
 	sf::RenderWindow& windowRef;
-	sf::Texture BulletTex;
 	Pool& BulletPool;
 	Player& player;
 	SpaceShip sp;

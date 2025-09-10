@@ -5,7 +5,7 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode({750,950}),"Space Shooter");
 	sf::Clock clock;
-	PlayArea playArea(100,window);
+	PlayArea playArea(window);
 	while(window.isOpen())
 	{
 		float delta = clock.restart().asSeconds();

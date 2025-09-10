@@ -6,7 +6,6 @@ Player::Player(int id,const sf::Vector2f& pos, Grid& grid,UIManager& UI)
 	sp(pos,BaseImgPath,EngineImgPath,ShieldImgPath,DestructionImgPath),
 	EngineAnim(64,64,8,0.1f),
 	ShieldAnim(64,64,10,0.09f),
-	BulletAnim(9,12,8,0.09f),
 	FiringAnim(64,64,9,0.03f),
 	DestructionAnim(64,64,8,0.15f),
 	grid(grid),
@@ -14,10 +13,6 @@ Player::Player(int id,const sf::Vector2f& pos, Grid& grid,UIManager& UI)
 	ui(UI)
 {
 	health = 100.f;
-	if(!BulletTex.loadFromFile(BulletImgPath))
-	{
-		std::cout << "FAILED TO LOAD BULLET TEXTURE!!!\n";
-	}
 	sp.SetSize({ playerShipSize,playerShipSize });
 	sp.UpdateBaseTexRect(sf::IntRect({0, 0},{64,64}));
 	sp.UpdateEngineTexRect(sf::IntRect({0, 0},{64,64}));
@@ -250,45 +245,36 @@ void Player::DestructionEvent(float delta)
 
 void Player::Actions(float delta, Pool& bulletPool,std::optional<sf::Event> e)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+	if(!IsDestroyed())
 	{
-		sp.SetShieldState(true);
-	}
-	// if mouse is pressed and it is left mouse button
-	if (const auto* mouseButtonPressed = e->getIf<sf::Event::MouseButtonPressed>())
-	{
-		SetFiringState(true);
-		if (mouseButtonPressed->button == sf::Mouse::Button::Left)
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
 		{
-			Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
-			if (firstBullet)
+			sp.SetShieldState(true);
+		}
+		// if mouse is pressed and it is left mouse button
+		if (const auto* mouseButtonPressed = e->getIf<sf::Event::MouseButtonPressed>())
+		{
+			SetFiringState(true);
+			if (mouseButtonPressed->button == sf::Mouse::Button::Left)
 			{
-				sf::Vector2f FirstMuzzleLocation = GetPosition() + LBulletSocket;
-				firstBullet->SetPosition(FirstMuzzleLocation.x, FirstMuzzleLocation.y);
-				firstBullet->SetActive(true);
-			}
-			Bullets* secondBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
-			if (secondBullet)
-			{
-				sf::Vector2f SecondMuzzleLocation = GetPosition() + RBulletSocket;
-				secondBullet->SetPosition(SecondMuzzleLocation.x, SecondMuzzleLocation.y);
-				secondBullet->SetActive(true);
+				Bullets* firstBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
+				if (firstBullet)
+				{
+					sf::Vector2f FirstMuzzleLocation = GetPosition() + LBulletSocket;
+					firstBullet->SetPosition(FirstMuzzleLocation.x, FirstMuzzleLocation.y);
+					firstBullet->SetActive(true);
+				}
+				Bullets* secondBullet = dynamic_cast<Bullets*>(bulletPool.GetFreeEntity());
+				if (secondBullet)
+				{
+					sf::Vector2f SecondMuzzleLocation = GetPosition() + RBulletSocket;
+					secondBullet->SetPosition(SecondMuzzleLocation.x, SecondMuzzleLocation.y);
+					secondBullet->SetActive(true);
+				}
 			}
 		}
 	}
 }
-
-
-sf::Texture& Player::GetBulletTex()
-{
-	return BulletTex;
-}
-
-Animation Player::GetBulletAnim()
-{
-	return BulletAnim;
-}
-
 
 Type Player::GetType() const
 {

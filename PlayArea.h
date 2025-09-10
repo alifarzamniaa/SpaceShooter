@@ -3,16 +3,17 @@
 #include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Props/Pool.h"
-#include "Props/Bullets.h"
+#include "Props/Projectile/Bullets.h"
 #include "background.h"
 #include "Enemy/Type1/Fighter.h"
 #include "Props/Grid.h"
 #include "UI/UIManager.h"
+#include "Props/SpawnManager.h"
 
 class PlayArea
 {
 public:
-	PlayArea(int PlayerBulletSize, sf::RenderWindow& window);
+	PlayArea(sf::RenderWindow& window);
 	void Draw();
 	void Update(float delta);
 	void InputHandler(float delta,std::optional<sf::Event> e);
@@ -22,9 +23,7 @@ private:
 	Grid grid;
 	Player player;
 	Background bg;
-	Pool playerBulletPool;
-	Pool fighterBulletPool;
-	Fighter f1;
+	SpawnManager spawnManager;
 	UIManager UI;
 	sf::Music GameMusic;
 	float Timer = 0.0f;

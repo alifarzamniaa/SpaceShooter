@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "Props/SpaceShip.h"
 #include "Animation.h"
-#include "Props/Bullets.h"
+#include "Props/Projectile/Bullets.h"
 #include "Props/Pool.h"
 #include "Props/Grid.h"
 #include "UI/UIManager.h"
@@ -40,8 +40,6 @@ public:
 	void DestructionEvent(float delta);
 	void Actions(float delta, Pool& bulletPool, std::optional<sf::Event> e);
 	
-	sf::Texture& GetBulletTex();
-	Animation GetBulletAnim();
 
 	Type GetType() const override;
 private:
@@ -50,7 +48,6 @@ private:
 	std::string EngineImgPath = "Images/Player/Engine.png";
 	std::string ShieldImgPath = "Images/Player/Shield.png";
 	std::string DestructionImgPath = "Images/Player/Destruction.png";
-	std::string BulletImgPath = "Images/Bullets/PlayerBullet.png";
 
 	Type type = Type::player;
 	//this is used for if texture is smaller than the box, you can adjust the gap between box and texture to make collision more accurate
@@ -73,11 +70,9 @@ private:
 	Grid& grid;
 	UIManager& ui;
 	SpaceShip sp;
-	sf::Texture BulletTex;
 	Animation FiringAnim;
 	Animation EngineAnim;
 	Animation ShieldAnim;
-	Animation BulletAnim;
 	Animation DestructionAnim;
 	std::vector<sf::Vector2i> LastOccupied;
 	CellEntityInfo Info;

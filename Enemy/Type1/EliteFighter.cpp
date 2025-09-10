@@ -1,37 +1,53 @@
-#include "Fighter.h"
+#include "EliteFighter.h"
 #include "../../AI/Actions/Roam.h"
 #include "../../AI/Actions/MoveTo.h"
 #include "../../AI/Actions/FireAction.h"
 #include <math.h>
 #include <iostream>
 
-Fighter::Fighter(int id, const RandomInfo& randomInfo, sf::RenderWindow& window, Player& player, Pool& bulletPool, Grid& grid)
+EliteFighter::EliteFighter(int id, const RandomInfo& randomInfo, sf::RenderWindow& window, Player& player, Pool& bulletPool, Grid& grid)
 	:
-	Enemy(window,player, randomInfo.initPos,bulletPool,
-	{
-	{64, 64, 6, 0.1f, "Images/Enemy/TypeOne/Fighter/Base.png"},
-	{64, 64, 10, 0.1f, "Images/Enemy/TypeOne/Fighter/Engine.png"},
-	{64, 64, 10, 0.09f, "Images/Enemy/TypeOne/Fighter/Shield.png"},
-	{64, 64, 8, 0.15f, "Images/Enemy/TypeOne/Fighter/Destruction.png"},
-	100, // health
-	400 // speed
-	}),
+	Enemy(window, player, randomInfo.initPos, bulletPool,
+		{
+		{64, 64, 16, 0.1f, "Images/Enemy/TypeOne/EliteFighter/Base.png"},
+		{64, 64, 10, 0.1f, "Images/Enemy/TypeOne/EliteFighter/Engine.png"},
+		{64, 64, 10, 0.09f, "Images/Enemy/TypeOne/EliteFighter/Shield.png"},
+		{64, 64, 10, 0.15f, "Images/Enemy/TypeOne/EliteFighter/Destruction.png"},
+		200, // health
+		300 // speed
+		}),
 	grid(grid),
 	InitHealth(GetHealth()),
 	id(id)
 {
 
 	//Socket Positions
-	BulletsSocket.push_back({ -15.f,15.f }); // left socket
-	BulletsSocket.push_back({ 15.f,15.f }); // right socket
-	FrameOfFire.push_back(2);// fires at frame 2
-	FrameOfFire.push_back(4);// same at 4
+	BulletsSocket.push_back({ -15.f,15.f });
+
+	BulletsSocket.push_back({ 15.f,15.f });
+
+	BulletsSocket.push_back({ -30.f,15.f });
+
+	BulletsSocket.push_back({ 30.f,15.f });
+
+	BulletsSocket.push_back({ -40.f,15.f });
+
+	BulletsSocket.push_back({ 40.f,15.f });
+
+	//Missle released frame number
+	FrameOfFire.push_back(5);
+	FrameOfFire.push_back(7);
+	FrameOfFire.push_back(9);
+	FrameOfFire.push_back(11);
+	FrameOfFire.push_back(13);
+	FrameOfFire.push_back(15);
+
 	InitPos = randomInfo.initPos;
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, randomInfo, this]() { return randomInfo.destinationPos; }));
-	ListOFActions.emplace_back(std::make_shared<Roam>(this, randomInfo.RoamDuration,0,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
-	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
+	ListOFActions.emplace_back(std::make_shared<Roam>(this, randomInfo.RoamDuration, 0, (float)window.getSize().x, speed, sf::Vector2f(0, (float)window.getSize().x)));
+	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
-	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
+	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
 
 	AI = std::make_unique<EnemyAI>(ListOFActions);
@@ -44,14 +60,14 @@ Fighter::Fighter(int id, const RandomInfo& randomInfo, sf::RenderWindow& window,
 
 	Info.id = id;
 	Info.Position = GetPosition();
-	Info.Size = GetSize() / 4.f;
+	Info.Size = {GetSize().x / 2.f ,GetSize().y / 4.f };
 	Info.EntityType = GetType();
-	
+
 
 	grid.AddToGrid(Info);
 }
 
-void Fighter::Draw(sf::RenderWindow& window)
+void EliteFighter::Draw(sf::RenderWindow& window)
 {
 	if (IsActive())
 	{
@@ -59,13 +75,13 @@ void Fighter::Draw(sf::RenderWindow& window)
 	}
 
 }
-void Fighter::Update(float delta)
+void EliteFighter::Update(float delta)
 {
-	
-	if(IsActive())
+
+	if (IsActive())
 	{
 		DestructionEvent(delta);
-		if(IsActive() && !IsDestroyed())
+		if (IsActive() && !IsDestroyed())
 		{
 			OnHit();
 			AI->Update(delta);
@@ -88,9 +104,9 @@ void Fighter::Update(float delta)
 			}
 		}
 	}
-	
+
 }
-void Fighter::Respawn()
+void EliteFighter::Respawn()
 {
 	SetDestroyedState(false);
 	SetHealth(InitHealth);
@@ -101,7 +117,7 @@ void Fighter::Respawn()
 		AI->Reset();
 	}
 }
-void Fighter::DestructionEvent(float delta)
+void EliteFighter::DestructionEvent(float delta)
 {
 	if (GetHealth() <= 0 && !IsDestroyed())
 	{
@@ -123,9 +139,9 @@ void Fighter::DestructionEvent(float delta)
 }
 
 
-void Fighter::RetrieveBullet()
+void EliteFighter::RetrieveBullet()
 {
-	if(!BulletList.empty())
+	if (!BulletList.empty())
 	{
 		BulletList.clear();
 	}
@@ -135,9 +151,9 @@ void Fighter::RetrieveBullet()
 	}
 }
 
-void Fighter::AIBehaviour()
+void EliteFighter::AIBehaviour()
 {
-	if(player.GetPosition().y < GetPosition().y && ShootingDir)
+	if (player.GetPosition().y < GetPosition().y && ShootingDir)
 	{
 		ShootingDir = false;
 		sp.SetRotation(sf::degrees(0));
@@ -147,13 +163,13 @@ void Fighter::AIBehaviour()
 		ShootingDir = true;
 		sp.SetRotation(sf::degrees(180));
 	}
-	if(IsMoving())
+	if (IsMoving())
 	{
 		Info.Position = GetPosition();
 		grid.AddToGrid(Info);
 	}
 }
-void Fighter::OnHit()
+void EliteFighter::OnHit()
 {
 	if (grid.IsEntityCollides(Info))
 	{
@@ -169,7 +185,7 @@ void Fighter::OnHit()
 		}
 	}
 }
-bool Fighter::IsInWallBoundary() const
+bool EliteFighter::IsInWallBoundary() const
 {
 	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
 	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
@@ -178,128 +194,128 @@ bool Fighter::IsInWallBoundary() const
 
 	return left >= 0 && right <= winWidth;
 }
-void Fighter::SetShieldState(bool in_State)
+void EliteFighter::SetShieldState(bool in_State)
 {
 	sp.SetShieldState(in_State);
 }
 
-void Fighter::SetDestroyedState(bool in_State)
+void EliteFighter::SetDestroyedState(bool in_State)
 {
 	Destroyed = in_State;
 }
 
-bool Fighter::IsDestroyed() const
+bool EliteFighter::IsDestroyed() const
 {
 	return Destroyed;
 }
 
-void Fighter::SetFiringState(bool in_State)
+void EliteFighter::SetFiringState(bool in_State)
 {
 	Firing = in_State;
 }
 
-bool Fighter::IsFiring() const
+bool EliteFighter::IsFiring() const
 {
 	return Firing;
 }
-bool Fighter::IsActive() const
+bool EliteFighter::IsActive() const
 {
 	return ActiveState;
 }
 
-void Fighter::SetActive(bool in_state)
+void EliteFighter::SetActive(bool in_state)
 {
 	ActiveState = in_state;
 }
 
-void Fighter::SetMoving(bool in_State)
+void EliteFighter::SetMoving(bool in_State)
 {
 	Moving = in_State;
 }
 
-bool Fighter::IsMoving() const
+bool EliteFighter::IsMoving() const
 {
 	return Moving;
 }
 
-float Fighter::GetTextureOffsetX() const
+float EliteFighter::GetTextureOffsetX() const
 {
 	return XTextureOffset;
 }
 
-float Fighter::GetTextureOffsetY() const
+float EliteFighter::GetTextureOffsetY() const
 {
 	return YTextureOffset;
 }
 
-float Fighter::GetSpeed() const
+float EliteFighter::GetSpeed() const
 {
 	return speed;
 }
 
-int Fighter::GetHealth() const
+int EliteFighter::GetHealth() const
 {
 	return health;
 }
 
-void Fighter::SetSpeed(float in_val)
+void EliteFighter::SetSpeed(float in_val)
 {
 	speed = in_val;
 }
 
-void Fighter::SetHealth(int in_val)
+void EliteFighter::SetHealth(int in_val)
 {
 	health = in_val;
 }
-sf::Vector2f Fighter::GetPosition() const
+sf::Vector2f EliteFighter::GetPosition() const
 {
 	return sp.GetPosition();
 }
 
-sf::Vector2f Fighter::GetSize() const
+sf::Vector2f EliteFighter::GetSize() const
 {
 	return sp.GetSize();
 }
 
-void Fighter::SetPosition(float x, float y)
+void EliteFighter::SetPosition(float x, float y)
 {
 	sp.SetPosition({ x,y });
 }
 
-void Fighter::SetSize(float width, float height)
+void EliteFighter::SetSize(float width, float height)
 {
 	sp.SetSize({ width,height });
 }
 
 
-int Fighter::GetFireCurrentFrame() const
+int EliteFighter::GetFireCurrentFrame() const
 {
 	return FiringAnim.GetCurrentIndex();
 }
 
 
 
-std::vector<sf::Vector2f> Fighter::GetSockets() const
+std::vector<sf::Vector2f> EliteFighter::GetSockets() const
 {
 	return BulletsSocket;
 }
 
-std::vector<int> Fighter::GetFrameOfFire() const
+std::vector<int> EliteFighter::GetFrameOfFire() const
 {
 	return FrameOfFire;
 }
 
-std::vector<Bullets*>& Fighter::GetBullets()
+std::vector<Bullets*>& EliteFighter::GetBullets()
 {
 	return BulletList;
 }
 
-Type Fighter::GetType() const
+Type EliteFighter::GetType() const
 {
 	return type;
 }
 
-bool Fighter::GetShootDir() const
+bool EliteFighter::GetShootDir() const
 {
 	return ShootingDir;
 }

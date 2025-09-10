@@ -90,6 +90,11 @@ void SpaceShip::ActiveDestruction()
 	ChangeBaseModelTex(DestructionT);
 }
 
+void SpaceShip::DeactiveDestruction()
+{
+	ChangeBaseModelTex(baseT);
+}
+
 void SpaceShip::SetRotation(const sf::Angle& in_rot)
 {
 	base.setRotation(in_rot);

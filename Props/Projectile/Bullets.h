@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "../Animation.h"
-#include "../Entity.h"
-#include "Grid.h"
+#include "../../Animation.h"
+#include "../../Entity.h"
+#include "../Grid.h"
 #include "SFML/Audio.hpp"
-#include "Particle.h"
+#include "../Particle.h"
 class Bullets : public Entity
 {
 public:

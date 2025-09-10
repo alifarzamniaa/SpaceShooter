@@ -1,13 +1,13 @@
 #pragma once
+#include "SFML/Graphics.hpp"
 #include "../Enemy.h"
 #include "../../AI/EnemyAI.h"
 #include "../../Props/SpaceShip.h"
 #include "../../Animation.h"
-
-class Fighter : public Enemy
+class EliteFighter : public Enemy
 {
 public:
-	Fighter(int id,const RandomInfo& loc,sf::RenderWindow& window, Player& player,Pool& bulletPool,Grid& grid);
+	EliteFighter(int id, const RandomInfo& loc, sf::RenderWindow& window, Player& player, Pool& bulletPool, Grid& grid);
 	void Draw(sf::RenderWindow& window) override;
 	void Update(float delta) override;
 
@@ -24,7 +24,7 @@ public:
 
 	void SetPosition(float x, float y) override;
 	void SetSize(float width, float height) override;
-	void OnHit() override; 
+	void OnHit() override;
 	bool IsActive() const override;
 	void SetActive(bool in_state) override;
 	void SetMoving(bool in_State) override;
@@ -83,4 +83,3 @@ private:
 	CellEntityInfo Info;
 	Grid& grid;
 };
-

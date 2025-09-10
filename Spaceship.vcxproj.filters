@@ -27,7 +27,7 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Props\Bullets.cpp">
+    <ClCompile Include="Props\Projectile\Bullets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayArea.cpp">
@@ -63,6 +63,15 @@
     <ClCompile Include="UI\UIManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Props\SpawnManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Props\Projectile\BulletResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\Type1\EliteFighter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -74,7 +83,7 @@
     <ClInclude Include="Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Props\Bullets.h">
+    <ClInclude Include="Props\Projectile\Bullets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Props\Pool.h">
@@ -120,6 +129,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UI\UIManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Props\SpawnManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Props\Projectile\BulletResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\Type1\EliteFighter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

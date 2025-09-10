@@ -1,5 +1,5 @@
 #include "EnemyAI.h"
-
+#include <iostream>
 EnemyAI::EnemyAI(std::vector<std::shared_ptr<AIAction>>& ListOfActions)
 	:
 	actionsList(std::move(ListOfActions))
@@ -54,5 +54,18 @@ void EnemyAI::AddTempAction(AIAction* Action)
 	{
 		std::cout << "!!NOT A Valid Action\n";
 	}
+}
 
+void EnemyAI::Reset()
+{
+	while(!actions.empty())
+	{
+		actions.pop();
+	}
+	CancelCurrentAction();
+	CurrentAction = nullptr;
+	for (auto& a : actionsList)
+	{
+		actions.push(a);
+	}
 }

@@ -1,4 +1,5 @@
 #include "MoveTo.h"
+#include <iostream>
 
 MoveTo::MoveTo(Enemy* e, const std::function<sf::Vector2f()>& Location)
 	:

@@ -20,6 +20,7 @@ public:
 	void SetShieldState(bool in_state);
 	void SetEngineState(bool in_state);
 	void ActiveDestruction();
+	void DeactiveDestruction();
 	void SetRotation(const sf::Angle& in_rot);
 	void SetPosition(const sf::Vector2f& in_pos);
 	void SetSize(const sf::Vector2f& in_size);
