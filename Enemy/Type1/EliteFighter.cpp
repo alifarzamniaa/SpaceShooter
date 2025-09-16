@@ -1,5 +1,5 @@
 #include "EliteFighter.h"
-#include "../../AI/Actions/Roam.h"
+#include "../../AI/Actions/WaveRoam.h"
 #include "../../AI/Actions/MoveTo.h"
 #include "../../AI/Actions/FireAction.h"
 #include <math.h>
@@ -43,8 +43,19 @@ EliteFighter::EliteFighter(int id, const RandomInfo& randomInfo, sf::RenderWindo
 	FrameOfFire.push_back(15);
 
 	InitPos = randomInfo.initPos;
-	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, randomInfo, this]() { return randomInfo.destinationPos; }));
-	ListOFActions.emplace_back(std::make_shared<Roam>(this, randomInfo.RoamDuration, 0, (float)window.getSize().x, speed, sf::Vector2f(0, (float)window.getSize().x)));
+	WaveRoamProp waveProp;
+	waveProp.TaskDuration = randomInfo.RoamDuration;
+	waveProp.MinRangeX = 0;
+	waveProp.MinRangeX = (float)window.getSize().x;
+	waveProp.MinRangeY = 0;
+	waveProp.MaxRangeY = (float)window.getSize().y / 2.f;
+	waveProp.amplitude = 0.2f;
+	waveProp.frequency = 5.f;
+	waveProp.dir = WaveDirection::XWave;
+	waveProp.speed = speed;
+
+	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [randomInfo, this]() { return randomInfo.destinationPos; }));
+	ListOFActions.emplace_back(std::make_shared<WaveRoam>(this,waveProp));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
@@ -62,7 +73,6 @@ EliteFighter::EliteFighter(int id, const RandomInfo& randomInfo, sf::RenderWindo
 	Info.Position = GetPosition();
 	Info.Size = {GetSize().x / 2.f ,GetSize().y / 4.f };
 	Info.EntityType = GetType();
-
 
 	grid.AddToGrid(Info);
 }
@@ -185,14 +195,23 @@ void EliteFighter::OnHit()
 		}
 	}
 }
-bool EliteFighter::IsInWallBoundary() const
+Boundary EliteFighter::WallBoundary() const
 {
-	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
-	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
-
-	float winWidth = (float)windowRef.getSize().x;
-
-	return left >= 0 && right <= winWidth;
+	Boundary b;
+	b.left = 0;
+	b.right = (float)windowRef.getSize().x;
+	b.top = 0;
+	b.bottom = (float)windowRef.getSize().y;
+	return b;
+}
+Boundary EliteFighter::entityBoundary() const
+{
+	Boundary b;
+	b.left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
+	b.right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
+	b.top = GetPosition().y - GetSize().y / 2.f + GetTextureOffsetY();
+	b.bottom = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
+	return b;
 }
 void EliteFighter::SetShieldState(bool in_State)
 {

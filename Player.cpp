@@ -112,9 +112,14 @@ void Player::OnHit()
 		auto Entities = grid.GetCollidedEntites(Info);
 		for (const auto& e : Entities)
 		{
-			if (e.EntityType == Type::enemyBullet)
+			if (e.EntityType == Type::fighterBullet)
 			{
 				SetHealth(GetHealth() - 10);
+				ui.PlayerHealthChange(GetHealth());
+			}
+			if (e.EntityType == Type::eliteFighterBullet)
+			{
+				SetHealth(GetHealth() - 20);
 				ui.PlayerHealthChange(GetHealth());
 			}
 		}

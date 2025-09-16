@@ -42,7 +42,8 @@ public:
 	int GetHealth() const override;
 	void SetSpeed(float in_val) override;
 	void SetHealth(int in_val) override;
-	bool IsInWallBoundary() const override;
+	Boundary WallBoundary() const override;
+	Boundary entityBoundary() const override;
 	int GetFireCurrentFrame() const override;
 	void Respawn();
 	std::vector<sf::Vector2f> GetSockets() const override;

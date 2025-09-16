@@ -21,6 +21,7 @@ private:
 	sf::Vector2f locToMove;
 	sf::Vector2f NormalizedDir;
 	sf::Vector2f Dir;
+	Boundary wallBound;
 	float speed;
 	bool IsActiveState = false;
 };

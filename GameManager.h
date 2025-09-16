@@ -4,16 +4,17 @@
 #include "Player.h"
 #include "Props/Pool.h"
 #include "Props/Projectile/Bullets.h"
+#include "Props/Projectile/BulletManager.h"
 #include "background.h"
 #include "Enemy/Type1/Fighter.h"
 #include "Props/Grid.h"
 #include "UI/UIManager.h"
-#include "Props/SpawnManager.h"
+#include "Props/EntitySpawnManager.h"
 
-class PlayArea
+class GameManager
 {
 public:
-	PlayArea(sf::RenderWindow& window);
+	GameManager(sf::RenderWindow& window);
 	void Draw();
 	void Update(float delta);
 	void InputHandler(float delta,std::optional<sf::Event> e);
@@ -23,7 +24,8 @@ private:
 	Grid grid;
 	Player player;
 	Background bg;
-	SpawnManager spawnManager;
+	BulletManager bulletManager;
+	EntitySpawnManager spawnManager;
 	UIManager UI;
 	sf::Music GameMusic;
 	float Timer = 0.0f;

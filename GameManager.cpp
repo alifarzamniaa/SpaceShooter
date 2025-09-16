@@ -1,12 +1,13 @@
-#include "PlayArea.h"
+#include "GameManager.h"
 #include <iostream>
-PlayArea::PlayArea(sf::RenderWindow& window)
+GameManager::GameManager(sf::RenderWindow& window)
 	:
 	window(window),
 	grid(32,32,window),
 	bg(window,50.f),
 	player(id++,{600.f,600.f},grid,UI),
-	spawnManager(id,player,grid,window),
+	bulletManager(id, grid, window),
+	spawnManager(id,player,grid,window,bulletManager),
 	UI(window,player.GetHealth())
 {
 	if(!GameMusic.openFromFile("SoundEffects/GameMusic.wav"))
@@ -20,24 +21,26 @@ PlayArea::PlayArea(sf::RenderWindow& window)
 	GameMusic.play();
 }
 
-void PlayArea::Draw()
+void GameManager::Draw()
 {
 	bg.Draw(window);
 	UI.Draw();
 	player.Draw(window);
+	bulletManager.Draw();
 	spawnManager.Draw();
 }
-void PlayArea::Update(float delta)
+void GameManager::Update(float delta)
 {
 	
 	bg.Update(delta,window);
 	player.Update(delta);
 	player.Movement(delta, { 0,(float)window.getSize().x }, { 0,(float)window.getSize().y });
+	bulletManager.Update(delta);
 	spawnManager.Update(delta);
 }
 
-void PlayArea::InputHandler(float delta, std::optional<sf::Event> e)
+void GameManager::InputHandler(float delta, std::optional<sf::Event> e)
 {
 	// handling events like pressed, released ... 
-	player.Actions(delta, spawnManager.GetPlayerBulletPool(), e);
+	player.Actions(delta, bulletManager.GetPlayerBulletPool(), e);
 }

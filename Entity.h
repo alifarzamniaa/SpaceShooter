@@ -5,7 +5,8 @@ enum Type
 	player,
 	enemy,
 	playerBullet,
-	enemyBullet
+	fighterBullet,
+	eliteFighterBullet
 };
 class Entity
 {

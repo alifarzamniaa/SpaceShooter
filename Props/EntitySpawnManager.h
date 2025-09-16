@@ -3,29 +3,33 @@
 #include "Pool.h"
 #include "../Player.h"
 #include "Projectile/BulletResource.h"
+#include "Projectile/BulletManager.h"
 #include "Grid.h"
 #include "../Enemy/Type1/Fighter.h"
 #include "../Enemy/Type1/EliteFighter.h"
 #include <random>
-class SpawnManager
+
+class EntitySpawnManager
 {
 public:
-	SpawnManager(int& id,Player& player,Grid& grid, sf::RenderWindow& window);
+	EntitySpawnManager(int& id,Player& player,Grid& grid, sf::RenderWindow& window, BulletManager& bulletMg);
 	void Draw();
 	void Update(float delta);
 	void SpawnEnemy();
-	Pool& GetPlayerBulletPool();
-	Pool& GetFighterBulletPool();
-	Pool& GetEliteFighterBulletPool();
+
+
 private:
-	BulletResource bulltetResource;
-	
+	void DrawPools(Pool& pool);
+	void UpdatePools(Pool& pool,float delta);
+	void SpawnLogic(int& remainingNumber,int enemyNumber, Pool& pool, std::vector<Entity*>& list);
+private:
 	std::random_device rd;
 	std::mt19937 random;
 
 	//references
 	Player& player;
 	Grid& grid;
+	BulletManager& bulletMg;
 	sf::RenderWindow& window;
 	int& id;
 	//values
@@ -37,13 +41,9 @@ private:
 	int remainingEliteFighter = 0;
 	int elitefighterNumberPool;
 
-	std::vector<Fighter*> ActiveFighter;
-	std::vector<EliteFighter*> ActiveEliteFighter;
-	//Bullets pool
-	Pool playerBulletPool;
+	std::vector<Entity*> ActiveFighter;
+	std::vector<Entity*> ActiveElite;
 
-	Pool fighterBulletPool;
-	Pool eliteFighterBulletPool;
 
 	//Enemy pool
 	Pool fighterEnemyPool;

@@ -138,7 +138,7 @@ void Bullets::OnHit()
 		for(const auto& e : Entities)
 		{
 			//its not a bullet && its not damaging the shooter(player bullet doesn't damage the player)
-			if(e.EntityType != Type::playerBullet && e.EntityType != Type::enemyBullet)
+			if(e.EntityType == player || e.EntityType == enemy)
 			{
 				if(ShootersType != e.EntityType)
 				{

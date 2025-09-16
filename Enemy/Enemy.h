@@ -11,6 +11,17 @@ struct RandomInfo
 	sf::Vector2f destinationPos;
 	float RoamDuration;
 };
+struct Boundary
+{
+	float left;
+	float right;
+	float top;
+	float bottom;
+	bool IsContain(const Boundary& other) const
+	{
+		return 	other.left <= right && other.right >= left && other.top <= bottom && other.bottom >= top;
+	}
+};
 struct AnimData
 {
 	int FrameWidth;
@@ -68,7 +79,8 @@ public:
 
 	virtual void SetSpeed(float in_val) = 0;
 	virtual void SetHealth(int in_val) = 0;
-	virtual bool IsInWallBoundary() const = 0;
+	virtual Boundary WallBoundary() const = 0;
+	virtual Boundary entityBoundary() const = 0;
 	virtual bool GetShootDir() const = 0;
 	virtual int GetFireCurrentFrame() const = 0;
 	virtual bool IsMoving() const = 0;

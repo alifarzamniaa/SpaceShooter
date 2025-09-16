@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
-#include "PlayArea.h"
+#include "GameManager.h"
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode({750,950}),"Space Shooter");
 	sf::Clock clock;
-	PlayArea playArea(window);
+	GameManager gamaManager(window);
 	while(window.isOpen())
 	{
 		float delta = clock.restart().asSeconds();
@@ -15,12 +15,12 @@ int main()
 			{
 				window.close();
 			}
-			playArea.InputHandler(delta,Event);
+			gamaManager.InputHandler(delta,Event);
 		}
 		
 		window.clear();
-		playArea.Update(delta);
-		playArea.Draw();
+		gamaManager.Update(delta);
+		gamaManager.Draw();
 		window.display();
 	}
 	return 0;

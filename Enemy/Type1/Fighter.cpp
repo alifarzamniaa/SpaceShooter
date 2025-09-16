@@ -28,7 +28,7 @@ Fighter::Fighter(int id, const RandomInfo& randomInfo, sf::RenderWindow& window,
 	FrameOfFire.push_back(4);// same at 4
 	InitPos = randomInfo.initPos;
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player, randomInfo, this]() { return randomInfo.destinationPos; }));
-	ListOFActions.emplace_back(std::make_shared<Roam>(this, randomInfo.RoamDuration,0,(float)window.getSize().x,speed,sf::Vector2f(0,(float)window.getSize().x)));
+	ListOFActions.emplace_back(std::make_shared<Roam>(this, randomInfo.RoamDuration,0,(float)window.getSize().x,speed));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
 	ListOFActions.emplace_back(std::make_shared<FireAction>(this));
 	ListOFActions.emplace_back(std::make_shared<MoveTo>(this, [&player,this]() { return sf::Vector2f(player.GetPosition().x, GetPosition().y); }));
@@ -169,15 +169,25 @@ void Fighter::OnHit()
 		}
 	}
 }
-bool Fighter::IsInWallBoundary() const
+Boundary Fighter::WallBoundary() const
 {
-	float left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
-	float right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
-
-	float winWidth = (float)windowRef.getSize().x;
-
-	return left >= 0 && right <= winWidth;
+	Boundary b;
+	b.left = 0;
+	b.right = (float)windowRef.getSize().x;
+	b.top = 0;
+	b.bottom = (float)windowRef.getSize().y;
+	return b;
 }
+Boundary Fighter::entityBoundary() const
+{	
+	Boundary b;
+	b.left = GetPosition().x - GetSize().x / 2.f + GetTextureOffsetX();
+	b.right = GetPosition().x + GetSize().x / 2.f - GetTextureOffsetX();
+	b.top = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
+	b.bottom = GetPosition().y + GetSize().y / 2.f - GetTextureOffsetY();
+	return b;
+}
+
 void Fighter::SetShieldState(bool in_State)
 {
 	sp.SetShieldState(in_State);
@@ -270,6 +280,7 @@ void Fighter::SetSize(float width, float height)
 {
 	sp.SetSize({ width,height });
 }
+
 
 
 int Fighter::GetFireCurrentFrame() const

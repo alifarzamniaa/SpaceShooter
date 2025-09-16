@@ -42,7 +42,8 @@ public:
 	int GetHealth() const override;
 	void SetSpeed(float in_val) override;
 	void SetHealth(int in_val) override;
-	bool IsInWallBoundary() const override;
+	Boundary WallBoundary() const override;
+	Boundary entityBoundary() const override;
 	int GetFireCurrentFrame() const override;
 	void Respawn();
 	std::vector<sf::Vector2f> GetSockets() const override;
@@ -58,11 +59,11 @@ private:
 	// texture may not be the same size as rect itself and may cause to inaccurate collision
 	// this value is for vertical offset used to adjust collision detection
 	// change this to get more accurate collision or make it 0 for texture that is the same size as rectangle
-	float XTextureOffset = 40.f;
+	float XTextureOffset = 10.f;
 	// texture may not be the same size as rect itself and may cause to inaccurate collision
 	// this value is for vertical offset used to adjust collision detection
 	// change this to get more accurate collision or make it 0 for texture that is the same size as rectangle
-	float YTextureOffset = 20.f;
+	float YTextureOffset = 40.f;
 
 	//objects
 	std::unique_ptr<EnemyAI> AI;
