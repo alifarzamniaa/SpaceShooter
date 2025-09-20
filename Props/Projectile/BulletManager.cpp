@@ -10,7 +10,7 @@ BulletManager::BulletManager(int& id, Grid& grid, sf::RenderWindow& window)
 	for (int i = 0; i < playerBulletPool.GetSize(); i++)
 	{
 		playerBulletPool.AddEntity(
-			std::make_unique<Bullets>(id++, 16, 16, bulltetResource.bPlayerBulletTex, bulltetResource.bplayerAnimation, sf::IntRect({ 0,0 }, { 9,12 }), 800.f, window.getSize().y, Type::playerBullet, Type::player, grid)
+			std::make_unique<Bullets>(id++, 16, 16,bulltetResource.bPlayerBulletTex, bulltetResource.bplayerAnimation, sf::IntRect({ 0,0 }, { 9,12 }), 800.f, window.getSize().y, Type::playerBullet, Type::player, grid)
 		);
 	}
 	for (int i = 0; i < fighterBulletPool.GetSize(); i++)

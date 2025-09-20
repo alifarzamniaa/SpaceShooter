@@ -117,7 +117,6 @@ void Fighter::DestructionEvent(float delta)
 		if (DestructionAnim.IsAnimFinished())
 		{
 			SetActive(false);
-			Respawn();
 		}
 	}
 }
@@ -219,6 +218,10 @@ bool Fighter::IsActive() const
 
 void Fighter::SetActive(bool in_state)
 {
+	if(!ActiveState && in_state == true)
+	{
+		Respawn();
+	}
 	ActiveState = in_state;
 }
 

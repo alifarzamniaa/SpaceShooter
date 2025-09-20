@@ -62,7 +62,7 @@ void PlayerHealth::onHealthChange(float HealthVal)
 {
 	int HealthNum = (HealthVal / HPAmountOfEachDot) - PlayerDotNum;
 	PlayerDotNum += HealthNum;
-	if(healthDot.getSize().x <= healthBar.getSize().x - DotSizePaddingX)
+	if(PlayerDotNum * WidthOfEachDot < healthBar.getSize().x - DotSizePaddingX)
 	{
 		healthDot.setSize({ (float)PlayerDotNum * WidthOfEachDot,healthDot.getSize().y });
 	}

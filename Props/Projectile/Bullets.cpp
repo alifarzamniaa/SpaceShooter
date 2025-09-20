@@ -130,7 +130,6 @@ void Bullets::SetDirection(bool in_val)
 }
 void Bullets::OnHit()
 {
-	bool ShouldDestroy = false;
 	if(grid.IsEntityCollides(Info) && !IsDestroyed())
 	{
 		Info.Position = GetPosition();

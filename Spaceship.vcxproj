@@ -155,6 +155,8 @@
     <ClCompile Include="Enemy\Type1\EliteFighter.cpp" />
     <ClCompile Include="Enemy\Type1\Fighter.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Props\Items\HealthItem.cpp" />
+    <ClCompile Include="Props\Items\ItemResource.cpp" />
     <ClCompile Include="Props\Projectile\BulletManager.cpp" />
     <ClCompile Include="Props\Projectile\BulletResource.cpp" />
     <ClCompile Include="Props\Projectile\Bullets.cpp" />
@@ -180,6 +182,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Enemy\Type1\Fighter.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Props\Items\HealthItem.h" />
+    <ClInclude Include="Props\Items\ItemResource.h" />
     <ClInclude Include="Props\Projectile\BulletManager.h" />
     <ClInclude Include="Props\Projectile\BulletResource.h" />
     <ClInclude Include="Props\Projectile\Bullets.h" />

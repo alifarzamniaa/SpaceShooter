@@ -8,6 +8,8 @@
 #include "../Enemy/Type1/Fighter.h"
 #include "../Enemy/Type1/EliteFighter.h"
 #include <random>
+#include "Items/HealthItem.h"
+#include "Items/ItemResource.h"
 
 class EntitySpawnManager
 {
@@ -21,7 +23,12 @@ public:
 private:
 	void DrawPools(Pool& pool);
 	void UpdatePools(Pool& pool,float delta);
-	void SpawnLogic(int& remainingNumber,int enemyNumber, Pool& pool, std::vector<Entity*>& list);
+	// HealthDropRate is in percent, e.g. 20 means a 20% chance of dropping health.
+	void EnemySpawnLogic(int& remainingNumber,int enemyNumber, Pool& pool, std::vector<Entity*>& list, int HealthDropRate);
+	// DropRateChance is in percent, e.g. 20 means a 20% chance of dropping health.
+	void HealthItemSpawnLogic(const sf::Vector2f& pos, int DropRateChance);
+
+	sf::Vector2f GetRandomPosition();
 private:
 	std::random_device rd;
 	std::mt19937 random;
@@ -31,6 +38,7 @@ private:
 	Grid& grid;
 	BulletManager& bulletMg;
 	sf::RenderWindow& window;
+	ItemResource itemResource;
 	int& id;
 	//values
 	int fighterNumbers;
@@ -41,10 +49,15 @@ private:
 	int remainingEliteFighter = 0;
 	int elitefighterNumberPool;
 
+
+	int HealhItemPoolNum;
+
+
 	std::vector<Entity*> ActiveFighter;
 	std::vector<Entity*> ActiveElite;
 
-
+	//Item Pool
+	Pool HealthItemPool;
 	//Enemy pool
 	Pool fighterEnemyPool;
 	Pool eliteFighterEnemyPool;

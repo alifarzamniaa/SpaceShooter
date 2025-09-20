@@ -143,7 +143,6 @@ void EliteFighter::DestructionEvent(float delta)
 		if (DestructionAnim.IsAnimFinished())
 		{
 			SetActive(false);
-			Respawn();
 		}
 	}
 }
@@ -244,6 +243,10 @@ bool EliteFighter::IsActive() const
 
 void EliteFighter::SetActive(bool in_state)
 {
+	if (!ActiveState && in_state == true)
+	{
+		Respawn();
+	}
 	ActiveState = in_state;
 }
 

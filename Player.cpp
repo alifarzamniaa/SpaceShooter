@@ -122,6 +122,11 @@ void Player::OnHit()
 				SetHealth(GetHealth() - 20);
 				ui.PlayerHealthChange(GetHealth());
 			}
+			if (e.EntityType == Type::IHealth)
+			{
+				SetHealth(GetHealth() + 20);
+				ui.PlayerHealthChange(GetHealth());
+			}
 		}
 	}
 		
